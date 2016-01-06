@@ -6,6 +6,7 @@
 #' @param nfish Number of fish to allocate among matrix
 #' @param distribute Specify if the fish distribution be random or uniform
 #' @param seed Set seed if distribute == random, defaults to 300
+#' @param area Specify location of fish in matrix, options are "upperleft", "upperright", "lowerleft","lowerright"
 #' @keywords initialize
 #' @export
 #' @examples 
