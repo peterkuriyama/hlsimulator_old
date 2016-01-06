@@ -17,6 +17,8 @@ initialize_population(numrow, numcol, nfish = 100, distribute, seed = 300,
 \item{distribute}{Specify if the fish distribution be random or uniform}
 
 \item{seed}{Set seed if distribute == random, defaults to 300}
+
+\item{area}{Specify area to distribute fish, options are 'upperleft', 'upperright', 'lowerleft', 'lowerright'}
 }
 \description{
 This function initializes the spatial distribution of the fish population
