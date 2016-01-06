@@ -4,16 +4,17 @@
 \alias{initialize_population}
 \title{Initialize Population}
 \usage{
-initialize_population(nrow, ncol, nfish = 100, distribute, seed = 300)
+initialize_population(numrow, numcol, nfish = 100, distribute, seed = 300,
+  area = "upperleft")
 }
 \arguments{
-\item{nrow}{Number of rows in matrix}
+\item{numrow}{Number of rows in matrix}
 
-\item{ncol}{Number of columns in matrix}
+\item{numcol}{Number of columns in matrix}
 
 \item{nfish}{Number of fish to allocate among matrix}
 
-\item{distribute}{should distribution be uniform or random}
+\item{distribute}{Specify if the fish distribution be random or uniform}
 
 \item{seed}{Set seed if distribute == random, defaults to 300}
 }
