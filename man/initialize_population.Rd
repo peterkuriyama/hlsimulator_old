@@ -4,8 +4,8 @@
 \alias{initialize_population}
 \title{Initialize Population}
 \usage{
-initialize_population(numrow, numcol, nfish = 100, distribute, seed = 300,
-  area = "upperleft")
+initialize_population(numrow, numcol, nfish = 100, seed = 300, distribute,
+  maxfish = 10, area = "upperleft")
 }
 \arguments{
 \item{numrow}{Number of rows in matrix}
@@ -14,11 +14,16 @@ initialize_population(numrow, numcol, nfish = 100, distribute, seed = 300,
 
 \item{nfish}{Number of fish to allocate among matrix}
 
-\item{distribute}{Specify if the fish distribution be random or uniform}
-
 \item{seed}{Set seed if distribute == random, defaults to 300}
 
-\item{area}{Specify area to distribute fish, options are 'upperleft', 'upperright', 'lowerleft', 'lowerright'}
+\item{distribute}{Specify if the fish distribution be 'uniform', 'patchy' or 'random'}
+
+\item{maxfish}{Maximum number of fish that can be sampled at a time}
+
+\item{area}{Specify area to distribute fish, options are 'upperleft', 'upperright', 'lowerleft', 'lowerright'. 
+Only necessary if distribute == 'random'}
+
+\item{percent}{percentage of area to sample. Only necessary if distribute == 'patchy'}
 }
 \description{
 This function initializes the spatial distribution of the fish population

@@ -4,17 +4,19 @@
 #' @param numrow Number of rows in matrix
 #' @param numcol Number of columns in matrix
 #' @param nfish Number of fish to allocate among matrix
-#' @param distribute Specify if the fish distribution be 'uniform', 'patchy' or 'random'
 #' @param seed Set seed if distribute == random, defaults to 300
-#' @param maxfish Maximum number of fish that can be sampled
-#' @param area Specify area to distribute fish, options are 'upperleft', 'upperright', 'lowerleft', 'lowerright'
+#' @param distribute Specify if the fish distribution be 'uniform', 'patchy' or 'random'
+#' @param maxfish Maximum number of fish that can be sampled at a time
+#' @param percent percentage of area to sample. Only necessary if distribute == 'patchy'
+#' @param area Specify area to distribute fish, options are 'upperleft', 'upperright', 'lowerleft', 'lowerright'. 
+#'   Only necessary if distribute == 'random'
 #' @keywords initialize
 #' @export
 #' @examples 
 #' put example here dude
 
-initialize_population <- function(numrow, numcol, nfish = 100, distribute, seed = 300, maxfish = 10,
-                                  area = 'upperleft'){
+initialize_population <- function(numrow, numcol, nfish = 100, seed = 300, distribute,  
+  maxfish = 10, area = 'upperleft'){
   #Create matrix of zeroes
   fishArea <- matrix(0, nrow = numrow, ncol = numcol)
   
