@@ -4,15 +4,17 @@
 #' @param numrow Number of rows in matrix
 #' @param numcol Number of columns in matrix
 #' @param nfish Number of fish to allocate among matrix
-#' @param distribute Specify if the fish distribution be random or uniform
+#' @param distribute Specify if the fish distribution be 'uniform', 'patchy' or 'random'
 #' @param seed Set seed if distribute == random, defaults to 300
+#' @param maxfish Maximum number of fish that can be sampled
 #' @param area Specify area to distribute fish, options are 'upperleft', 'upperright', 'lowerleft', 'lowerright'
 #' @keywords initialize
 #' @export
 #' @examples 
 #' put example here dude
 
-initialize_population <- function(numrow, numcol, nfish = 100, distribute, seed = 300, area = 'upperleft'){
+initialize_population <- function(numrow, numcol, nfish = 100, distribute, seed = 300, maxfish = 10,
+                                  area = 'upperleft'){
   #Create matrix of zeroes
   fishArea <- matrix(0, nrow = numrow, ncol = numcol)
   
@@ -25,8 +27,46 @@ initialize_population <- function(numrow, numcol, nfish = 100, distribute, seed 
   }
   
   #---------------------------------------------------------------------------------------------------------
+  #Patchily Distributed Fish
+  if(distribute == 'patchy'){
+    #set seed
+    set.seed(seed)
+
+    #Maybe specify percentage of things to pick ultimately??
+    possible.picks <- expand.grid(1:numrow, 1:numcol)
+    samp.df <- possible.picks[sample(1:nrow(possible.picks), size = 10), ] #hard coded to populate 10 cells now
+    names(samp.df) <- c('x', 'y')
+    
+    #Now sample fish
+    samp.vec <- vector(length = nfish)
+    counter <- 1
+    
+    #While loop generates samples
+    while(nfish > 0){
+      samp <- sample(1:maxfish, 1) #Maximum number of fish allowed per sample
+      if(samp >= nfish) samp <- nfish #prevents nfish from being exceeded
+      
+      samp.vec[counter] <- samp #store value in counter
+      
+      nfish <- nfish - samp #update nfish
+      counter <- counter + 1 #update counter
+    }
+
+    #Ensure that the length of sample vec is a multiple of number of rows in samp.df
+    samp.vec <- c(samp.vec, rep(0, length(samp.vec) %% nrow(samp.df)))
+    samp.mat <- matrix(samp.vec, nrow = nrow(samp.df))
+    samp.df$fish <- rowSums(samp.mat)
+
+    #assign to fishing area
+    for(ii in 1:nrow(samp.df)){
+      fishArea[samp.df[ii, 1], samp.df[ii, 2]] <- samp.df[ii, 3]
+    }  
+  }
+    
+  #---------------------------------------------------------------------------------------------------------
+  #If distribution is area specific...
   #Populate matrix with fish
-  if(distribute == 'random'){
+  if(distribute == 'area'){
     
     #Adjust rows and columns depending on specified area
     if(area == 'upperleft'){
@@ -63,7 +103,7 @@ initialize_population <- function(numrow, numcol, nfish = 100, distribute, seed 
     
     #While loop generates samples
     while(nfish > 0){
-      samp <- sample(1:10, 1) #Maximum number of fish allowed per sample
+      samp <- sample(1:maxfish, 1) #Maximum number of fish allowed per sample
       if(samp >= nfish) samp <- nfish #prevents nfish from being exceeded
     
       samp.vec[counter] <- samp #store value in counter
@@ -71,11 +111,13 @@ initialize_population <- function(numrow, numcol, nfish = 100, distribute, seed 
       nfish <- nfish - samp #update nfish
       counter <- counter + 1 #update counter
     }
-    
+
     #create data frame with matrix indices of interest
     samp.df <- expand.grid(rows, columns) #rows and columns are set depending on arguments
     names(samp.df) <- c('x', 'y')
     
+    #Ensure that the length of sample vec is a multiple of number of rows in samp.df
+    samp.vec <- c(samp.vec, rep(0, length(samp.vec) %% nrow(samp.df)))
     
     #These steps Sum the values which are stored by row
     samp.mat <- matrix(samp.vec, nrow = nrow(samp.df)) 
