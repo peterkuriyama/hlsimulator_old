@@ -17,59 +17,39 @@
 
 initialize_population <- function(numrow, numcol, nfish = 100, seed = 300, distribute,  
   maxfish = 10, area = 'upperleft', percent = .1){
+
+  #initial check
+  if(distribute %in% c('area', 'patchy', 'uniform') == FALSE){
+    stop('specify distribute as area, patchy, or uniform')
+  } 
+
   #Create matrix of zeroes
   fishArea <- matrix(0, nrow = numrow, ncol = numcol)
   
+  #Create data frame with matrix indices of interest
+  samp.df <- expand.grid(1:numrow, 1:numcol) #rows and columns are set depending on arguments
+  names(samp.df) <- c('x', 'y')
+
+  #Set Seed
+  set.seed(seed)
   #---------------------------------------------------------------------------------------------------------
   # Uniformly populate matrix, work on this
   if(distribute == 'uniform'){
-    #Spit out error if nfish is not large enough to have whole fish in each cell
-    # if(nfish %% nrow * ncol != 0) stop('must have whole fish in each cell, adjust nfish, nrow or ncol')
     
-    #Specify 
-    # samp.df <- expand.grid(1:numrow, 1:numcol)
-    # names(samp.df) <- c('x', 'y')
-    
-    # samp.df
-
+    #Modify number of fish that are allocated to each cell
     nfish.uni <- nfish - (nfish %% nrow(samp.df)) #number of fish for uniform allocation
     nfish <- nfish - nfish.uni
-    
-    # #Initialize empty vector of samples and the counter
-    # samp.vec <- vector(length = nfish)
-    # counter <- 1
-    
-    # #While loop generates samples
-    # while(nfish > 0){
-    #   samp <- sample(1:maxfish, 1) #Maximum number of fish allowed per sample
-    #   if(samp >= nfish) samp <- nfish #prevents nfish from being exceeded
-    
-    #   samp.vec[counter] <- samp #store value in counter
-      
-    #   nfish <- nfish - samp #update nfish
-    #   counter <- counter + 1 #update counter
-    # }
-
-
-    # samp.df$
-    # nfish / nrow(samp.df)
-
   }
   
   #---------------------------------------------------------------------------------------------------------
   #Patchily Distributed Fish
   if(distribute == 'patchy'){
-    #set seed
-    # set.seed(seed)
-
+    
     #Maybe specify percentage of things to pick ultimately??
     possible.picks <- expand.grid(1:numrow, 1:numcol)
     nsamps <- percent * nrow(possible.picks)
 
     samp.df <- possible.picks[sample(1:nrow(possible.picks), size = nsamps), ] #hard coded to populate 10 cells now
-    names(samp.df) <- c('x', 'y')
-    
-    
   }
     
   #---------------------------------------------------------------------------------------------------------
@@ -98,6 +78,9 @@ initialize_population <- function(numrow, numcol, nfish = 100, seed = 300, distr
       columns <- ((1 + numcol / 2)):numcol
     }
 
+    #Create specific samp.df for area case
+    samp.df <- expand.grid(rows, columns)
+    names(samp.df) <- c('x', 'y')
     #set seed
     # set.seed(seed)
     
@@ -121,9 +104,6 @@ initialize_population <- function(numrow, numcol, nfish = 100, seed = 300, distr
     #   counter <- counter + 1 #update counter
     # }
 
-    #create data frame with matrix indices of interest
-    # samp.df <- expand.grid(rows, columns) #rows and columns are set depending on arguments
-    # names(samp.df) <- c('x', 'y')
     
     # #Ensure that the length of sample vec is a multiple of number of rows in samp.df
     # samp.vec <- c(samp.vec, rep(0, length(samp.vec) %% nrow(samp.df)))
@@ -137,7 +117,7 @@ initialize_population <- function(numrow, numcol, nfish = 100, seed = 300, distr
     #   fishArea[samp.df[ii, 1], samp.df[ii, 2]] <- samp.df[ii, 3]
     # }
   }
-  set.seed(seed)
+
   #Now sample fish
   samp.vec <- vector(length = nfish)
   counter <- 1
