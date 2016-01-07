@@ -53,8 +53,7 @@ initialize_population <- function(numrow, numcol, nfish = 100, seed = 300, distr
   }
     
   #---------------------------------------------------------------------------------------------------------
-  #If distribution is area specific...
-  #Populate matrix with fish
+  #If distribution is area specific
   if(distribute == 'area'){
     
     #Adjust rows and columns depending on specified area
@@ -81,41 +80,6 @@ initialize_population <- function(numrow, numcol, nfish = 100, seed = 300, distr
     #Create specific samp.df for area case
     samp.df <- expand.grid(rows, columns)
     names(samp.df) <- c('x', 'y')
-    #set seed
-    # set.seed(seed)
-    
-    #Populate matrix with samples
-    #For now only does upper left of matrix
-    #Not allowed to populate with more than nfish
-    #Will continue until all fish are allocated
-    
-    #Initialize empty vector of samples and the counter
-    # samp.vec <- vector(length = nfish)
-    # counter <- 1
-    
-    #While loop generates samples
-    # while(nfish > 0){
-    #   samp <- sample(1:maxfish, 1) #Maximum number of fish allowed per sample
-    #   if(samp >= nfish) samp <- nfish #prevents nfish from being exceeded
-    
-    #   samp.vec[counter] <- samp #store value in counter
-      
-    #   nfish <- nfish - samp #update nfish
-    #   counter <- counter + 1 #update counter
-    # }
-
-    
-    # #Ensure that the length of sample vec is a multiple of number of rows in samp.df
-    # samp.vec <- c(samp.vec, rep(0, length(samp.vec) %% nrow(samp.df)))
-    
-    # #These steps Sum the values which are stored by row
-    # samp.mat <- matrix(samp.vec, nrow = nrow(samp.df)) 
-    # samp.df$fish <- rowSums(samp.mat) 
-    
-    # #assign to fishing area
-    # for(ii in 1:nrow(samp.df)){
-    #   fishArea[samp.df[ii, 1], samp.df[ii, 2]] <- samp.df[ii, 3]
-    # }
   }
 
   #Now sample fish
@@ -138,7 +102,6 @@ initialize_population <- function(numrow, numcol, nfish = 100, seed = 300, distr
   samp.mat <- matrix(samp.vec, nrow = nrow(samp.df))
   samp.df$fish <- rowSums(samp.mat)
 
-# browser()
   #Add uniform # of fish to each cell
   if(distribute == 'uniform'){
     samp.df$fish <- samp.df$fish + nfish.uni / nrow(samp.df)
