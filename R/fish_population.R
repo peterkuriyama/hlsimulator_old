@@ -6,14 +6,15 @@
 #'@param scope the scope of fishing movement, default to 1 so fish in surrounding 1 cells can move in
 #'@param nhooks number of hooks at the smallest sampling size
 #'@param ndrops number of drops, default is 5 following hook and line protocol
-
+#'@param process specify process by which fish are sampled, options are 'multinomial' and 'hypergeometric'
 #may need to add angler specifications in at each time
 #currently it's just 15 hooks per drop, without the ability to specify angler 
 #location on boat
 
 #also play with sampling probabilities and movements
 
-fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops){
+fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
+  process){
   #------------------------------------------------------
   #Count fish within the range
   row_range <- (location[1] - scope):(location[1] + scope)
@@ -56,8 +57,39 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops){
   #------------------------------------------------------
   #Now fish in specified cell, called zero.index
   fish_to_catch <- fish_df[zero_index, 'moved']
-  lambda <- fish_to_catch / nhooks #expected cpue (nfish / nhooks)
+  # lambda <- fish_to_catch / nhooks #expected cpue (nfish / nhooks)
+  
+  hookProbs <- rep(1 / (nhooks + 1), (nhooks + 1)) #All Hooks have equal probability
+  catches <- matrix(nrow = (nhooks + 1), ncol = nhooks)
 
+  
+  if(process == 'hypergeometric'){
+
+  }
+
+
+  #multinomial process is still really in development
+  if(process == 'multinomial'){
+    for(ii in 1:nhooks){
+    catches[, ii] <- rmultinom(1, size = 1, prob = hookProbs)
+
+    rmultinom(1, size = fish_to_catch, prob = hookProbs)
+
+    #update hook probabilties if fish are caught
+    if (sum(catches[, ii]) == 1 & which(catches[, ii] == 1) != 1) {
+      hookProbs[1] <- hookProbs[1] + hookProbs[which(catches[, ii] == 1)]
+      hookProbs[which(catches[, ii] == 1)] <- 0
+    }
+
+   } 
+  }
+
+
+  fo
+  
+  # sum(catches)
+  sum(catches[2:nrow(catches), ])
+  
   #Catch fish with poisson sample
   samples <- rpois(ndrops, lambda = lambda) 
 
