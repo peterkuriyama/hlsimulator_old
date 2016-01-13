@@ -21,7 +21,7 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   row_range <- row_range[row_range %in% 1:nrow(fish_area)]
 
   col_range <- (location[2] - scope):(location[2] + scope)
-  col_range <- col_range[col_range %in% 1:ncol(fishArea)]
+  col_range <- col_range[col_range %in% 1:ncol(fish_area)]
 
   fish_range <- fish_area[row_range, col_range] #define range to fish...
   fish_in_loc <- fish_area[location[1], location[2]] #Number of fish in specified location
@@ -57,19 +57,30 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   #------------------------------------------------------
   #Now fish in specified cell, called zero.index
   fish_to_catch <- fish_df[zero_index, 'moved']
-  # lambda <- fish_to_catch / nhooks #expected cpue (nfish / nhooks)
-  
-  hookProbs <- rep(1 / (nhooks + 1), (nhooks + 1)) #All Hooks have equal probability
-  catches <- matrix(nrow = (nhooks + 1), ncol = nhooks)
-
+# browser()
   
   if(process == 'hypergeometric'){
+    ###in rhyper
+    #n is number of failures
+    #m is number of successes (fish)
+    #k is number of samples, both n = k = nhooks
+    #nn is number of sampling events, maybe equal to ndrops
+
+    samples <- vector(length = ndrops)
+
+    for(ii in 1:ndrops){
+      samples[ii] <- rhyper(n = nhooks, m = fish_to_catch, k = nhooks, nn = 1)
+      fish_to_catch <- fish_to_catch - samples[ii] #remove caught fish
+    }
 
   }
 
 
   #multinomial process is still really in development
   if(process == 'multinomial'){
+    hookProbs <- rep(1 / (nhooks + 1), (nhooks + 1)) #All Hooks have equal probability
+    catches <- matrix(nrow = (nhooks + 1), ncol = nhooks)
+
     for(ii in 1:nhooks){
     catches[, ii] <- rmultinom(1, size = 1, prob = hookProbs)
 
@@ -83,19 +94,10 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
 
    } 
   }
-
-
-  fo
   
-  # sum(catches)
-  sum(catches[2:nrow(catches), ])
-  
-  #Catch fish with poisson sample
-  samples <- rpois(ndrops, lambda = lambda) 
-
   #Update number of fish in each cell
   fish_df$fished <- fish_df$moved
-  fish_df[zero_index, 'fished'] <- fish_df[zero_index, 'fished'] - sum(samples)
+  fish_df[zero_index, 'fished'] <- fish_to_catch
   
   #movement back to cells is based on proportions that moved in
   move_back_probs <- fish_df$moving
@@ -105,8 +107,8 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   moved_back <- as.vector(rmultinom(1, size = fish_df[zero_index, 'fished'], 
       prob = move_back_probs / sum(move_back_probs)))
   
-
   fish_df$delta <- moved_back
+  
   #update fish counts
   fish_df$final <- fish_df$fished + fish_df$delta 
   fish_df[zero_index, 'final'] <- fish_df[zero_index, 'delta']
