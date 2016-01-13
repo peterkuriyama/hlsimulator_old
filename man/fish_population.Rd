@@ -4,16 +4,20 @@
 \alias{fish_population}
 \title{Fish the Population}
 \usage{
-fish_population(fishArea, location, max.prob, delta.prob)
+fish_population(fish_area, location, scope = 1, nhooks, ndrops, process)
 }
 \arguments{
+\item{fish_area}{Matrix with the distribution of fish}
+
 \item{location}{vector specifying row and column to fish in}
 
-\item{max.prob}{probability of catching fish in specified cells}
+\item{scope}{the scope of fishing movement, default to 1 so fish in surrounding 1 cells can move in}
 
-\item{delta.prob}{change in probability getting further from specified location}
+\item{nhooks}{number of hooks at the smallest sampling size}
 
-\item{fish.area}{output from initialize_population function}
+\item{ndrops}{number of drops, default is 5 following hook and line protocol}
+
+\item{process}{specify process by which fish are sampled, options are 'multinomial' and 'hypergeometric'}
 }
 \description{
 Function to fish the population

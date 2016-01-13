@@ -7,8 +7,9 @@
 #'@param nhooks number of hooks at the smallest sampling size
 #'@param ndrops number of drops, default is 5 following hook and line protocol
 #'@param process specify process by which fish are sampled, options are 'multinomial' and 'hypergeometric'
+#'@export
 #may need to add angler specifications in at each time
-#currently it's just 15 hooks per drop, without the ability to specify angler 
+#currently it's just 15 hooks per drop, without the ability to specify angler
 #location on boat
 
 #also play with sampling probabilities and movements
@@ -30,14 +31,14 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
 
   #------------------------------------------------------
   #Move fish to specified location
-  
+
   #Calculate movement probabilities
   #currently nothing goes out of specified location
-  #Movement probabilites depend on number of fish outside relative to 
+  #Movement probabilites depend on number of fish outside relative to
   #total fish outside
   probs <- fish_range / nfish_outside
-  
-  #create data frame of fish_range [fish to catch] because 
+
+  #create data frame of fish_range [fish to catch] because
     #easier to manipulate
   fish_df <- melt(fish_range)
   fish_df$prob <- melt(probs)$value
@@ -47,18 +48,18 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   fish_df[zero_index, 'prob'] <- 0
 
   #Calculate number of moving fish with binomial distribution
-  fish_df$moving <- apply(fish_df, MAR = 1, FUN = function(x) rbinom(n = 1, size = x['value'], 
+  fish_df$moving <- apply(fish_df, MAR = 1, FUN = function(x) rbinom(n = 1, size = x['value'],
     prob = x['prob']))
 
   #Now update fish
   fish_df$moved <- fish_df$value - fish_df$moving #moved column indicates nfish after movement
   fish_df[zero_index, 'moved'] <- fish_df[zero_index, 'value'] + sum(fish_df$moving)
-  
+
   #------------------------------------------------------
   #Now fish in specified cell, called zero.index
   fish_to_catch <- fish_df[zero_index, 'moved']
 # browser()
-  
+
   if(process == 'hypergeometric'){
     ###in rhyper
     #n is number of failures
@@ -92,25 +93,25 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
       hookProbs[which(catches[, ii] == 1)] <- 0
     }
 
-   } 
+   }
   }
-  
+
   #Update number of fish in each cell
   fish_df$fished <- fish_df$moved
   fish_df[zero_index, 'fished'] <- fish_to_catch
-  
+
   #movement back to cells is based on proportions that moved in
   move_back_probs <- fish_df$moving
   move_back_probs[zero_index] <- fish_df[zero_index, 'value']
 
   # Sample from multinomial distribution
-  moved_back <- as.vector(rmultinom(1, size = fish_df[zero_index, 'fished'], 
+  moved_back <- as.vector(rmultinom(1, size = fish_df[zero_index, 'fished'],
       prob = move_back_probs / sum(move_back_probs)))
-  
+
   fish_df$delta <- moved_back
-  
+
   #update fish counts
-  fish_df$final <- fish_df$fished + fish_df$delta 
+  fish_df$final <- fish_df$fished + fish_df$delta
   fish_df[zero_index, 'final'] <- fish_df[zero_index, 'delta']
 
   #Update fish_area matrix
