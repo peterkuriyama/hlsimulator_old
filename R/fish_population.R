@@ -16,6 +16,7 @@
 
 fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   process){
+# browser()
   #------------------------------------------------------
   #Count fish within the range
   row_range <- (location[1] - scope):(location[1] + scope)
@@ -24,10 +25,28 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   col_range <- (location[2] - scope):(location[2] + scope)
   col_range <- col_range[col_range %in% 1:ncol(fish_area)]
 
-  fish_range <- fish_area[row_range, col_range] #define range to fish...
-  fish_in_loc <- fish_area[location[1], location[2]] #Number of fish in specified location
+  #Define range to fish
+  fish_area_melted <- melt(fish_area)
 
+  #Use melted matrix because fish_area is easier to subset
+  fish_range_melted <- subset(fish_area_melted, Var1 %in% row_range & Var2 %in% col_range)
+  fish_location_melted <-subset(fish_area_melted, Var1 == location[1] & Var2 == location[2])
+
+  #define zero index
+  zero_index <-  which(fish_range_melted$Var1 == location[1] & fish_range_melted$Var2 == location[2])
+
+  fish_range <- matrix(fish_range_melted$value, nrow = length(row_range), ncol = length(col_range))
+  fish_in_loc <- fish_location_melted$value
+
+  #define number of fish outside
   nfish_outside <- sum(fish_range) - fish_in_loc
+
+#
+#   matrix(subset(fish_area_melted, Var1 %in% row_range & Var2 %in% col_range) ,
+#          nrow = length(row_range))
+#
+#   fish_range <- fish_area[row_range, col_range] #define range to fish...
+#   fish_in_loc <- fish_area[location[1], location[2]] #Number of fish in specified location
 
   #------------------------------------------------------
   #Move fish to specified location
@@ -43,8 +62,19 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   fish_df <- melt(fish_range)
   fish_df$prob <- melt(probs)$value
 
-  #Probability in specified location is zero
-  zero_index <- which(fish_df$Var1 == 2 & fish_df$Var2 == 2)
+  # if(sum(is.na(fish_df$prob)) > 0) browser()
+
+  #If there are no fish within scope, set movement probabilities to 0
+  if(nfish_outside == 0){
+    fish_df$prob <- 0
+  }
+
+  #Stop fishing if there are no fish (return 0s for samples)
+  if(sum(fish_df$value) == 0){
+    # browser()
+    return(list(updated_area = fish_area, samples = rep(0, ndrops)))
+  }
+
   fish_df[zero_index, 'prob'] <- 0
 
   #Calculate number of moving fish with binomial distribution
@@ -69,9 +99,9 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
 
     samples <- vector(length = ndrops)
 
-    for(ii in 1:ndrops){
-      samples[ii] <- rhyper(n = nhooks, m = fish_to_catch, k = nhooks, nn = 1)
-      fish_to_catch <- fish_to_catch - samples[ii] #remove caught fish
+    for(qq in 1:ndrops){
+      samples[qq] <- rhyper(n = nhooks, m = fish_to_catch, k = nhooks, nn = 1)
+      fish_to_catch <- fish_to_catch - samples[qq] #remove caught fish
     }
 
   }
@@ -100,19 +130,29 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   fish_df$fished <- fish_df$moved
   fish_df[zero_index, 'fished'] <- fish_to_catch
 
-  #movement back to cells is based on proportions that moved in
-  move_back_probs <- fish_df$moving
-  move_back_probs[zero_index] <- fish_df[zero_index, 'value']
+  #Two conditions:
+  #No fish left, return empty cells
+  if(fish_to_catch == 0) fish_df$final <- fish_df$fished
 
-  # Sample from multinomial distribution
-  moved_back <- as.vector(rmultinom(1, size = fish_df[zero_index, 'fished'],
-      prob = move_back_probs / sum(move_back_probs)))
+  #if there are fish that can move back, move them
+  if(fish_to_catch != 0){
+    #movement back to cells is based on proportions that moved in
+    move_back_probs <- fish_df$moving
+    move_back_probs[zero_index] <- fish_df[zero_index, 'value']
 
-  fish_df$delta <- moved_back
+    mult_prob <- move_back_probs / sum(move_back_probs)
 
-  #update fish counts
-  fish_df$final <- fish_df$fished + fish_df$delta
-  fish_df[zero_index, 'final'] <- fish_df[zero_index, 'delta']
+    # if(is.na(sum(mult_prob))) mult_prob <- rep(0, length(move_back_probs))
+    # Sample from multinomial distribution
+    moved_back <- as.vector(rmultinom(1, size = fish_df[zero_index, 'fished'],
+                                      prob = mult_prob))
+
+    fish_df$delta <- moved_back
+
+    #update fish counts
+    fish_df$final <- fish_df$fished + fish_df$delta
+    fish_df[zero_index, 'final'] <- fish_df[zero_index, 'delta']
+  }
 
   #Update fish_area matrix
   fish_area[row_range, col_range] <- matrix(fish_df$final,
