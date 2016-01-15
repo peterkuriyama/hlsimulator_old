@@ -20,7 +20,7 @@
 conduct_survey <- function(fish_area, location_list, scope, nhooks, ndrops, process = 'hypergeometric'){
 
   #keep initial population matrix
-  init_area <- init
+  init_area <- fish_area
 
   #Name sample list
   sample_list <- vector('list', length = length(location_list))
