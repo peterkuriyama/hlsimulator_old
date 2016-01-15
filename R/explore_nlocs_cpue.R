@@ -53,12 +53,19 @@ explore_nlocs_cpue <- function(numrow, numcol, nfish, seed = 300, numlocs = 100,
     cpue.list[[ii]] <- temp$cpue
   }
 
-# browser()
-  
+  #Convert list into data frame
+  names(cpue.list) <- 1:numlocs
+  cpues <- ldply(cpue.list)
   #Just average all things
-  avg.cpue <- sapply(cpue.list, FUN = function(x) mean(unlist(x)))
+  # avg.cpue <- sapply(cpue.list, FUN = function(x) mean(unlist(x)))
   
-  plot(1:100, avg.cpue, type = 'o', pch = 19, ylim = c(0, 1), xlim = c(0, numlocs + 1))
+  # plot(1:numlocs, avg.cpue, type = 'o', pch = 19, ylim = c(0, 1), xlim = c(0, numlocs + 1))
 
-  return(cpue.list)
+  return(cpues)
 }
+
+
+
+
+
+
