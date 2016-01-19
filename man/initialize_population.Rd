@@ -5,7 +5,7 @@
 \title{Initialize Population}
 \usage{
 initialize_population(numrow, numcol, nfish = 100, seed = 300, distribute,
-  maxfish = 10, area = "upperleft")
+  maxfish = 10, area = "upperleft", percent = 0.1)
 }
 \arguments{
 \item{numrow}{Number of rows in matrix}
@@ -29,7 +29,14 @@ Only necessary if distribute == 'random'}
 This function initializes the spatial distribution of the fish population
 }
 \examples{
-put example here dude
+
+initialize_population(numrow = 10, numcol = 10, nfish = 1000, distribute = 'uniform')
+
+initialize_population(numrow = 10, numcol = 10, nfish = 1000, distribute = 'area',
+                            area = 'upperright')
+
+initialize_population(numrow = 10, numcol = 10, nfish = 100, distribute = 'patchy',
+  percent = .2)
 }
 \keyword{initialize}
 
