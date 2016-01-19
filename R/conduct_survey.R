@@ -33,16 +33,18 @@ conduct_survey <- function(fish_area, location_list, scope, nhooks, ndrops, proc
     # location <- location_list[[zz]]
     temp <- fish_population(fish_area = fish_area, location = location_list[[zz]], scope = scope,
                     nhooks = nhooks, ndrops = ndrops, process = process)
+
     fish_area <- temp[[1]]
     sample_list[[zz]] <- temp[[2]]
-
   }
 
   samples <- ldply(sample_list)
   names(samples) <- c('location', paste0('drop', 1:ndrops))
+  cpue <- samples
+  cpue[2:(ndrops + 1)] <- cpue[2:(ndrops + 1)] / nhooks
 
   out <- list(init_area = init_area, sampled_area = fish_area, samples = samples,
-       cpue = samples[2:(ndrops + 1)] / nhooks)
+       cpue = cpue)
 
   return(out)
 }

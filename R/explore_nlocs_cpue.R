@@ -29,7 +29,7 @@ explore_nlocs_cpue <- function(numrow, numcol, nfish, seed = 300, numlocs = 100,
   names(locations) <- c("", "")
 
   set.seed(seed)
-  locations.list <- sapply(1:numlocs, FUN = function(x) sample(1:numlocs, x, 
+  locations.list <- sapply(1:numlocs, FUN = function(x) sample(1:nrow(locations), x, 
     replace = FALSE))
   avg.cpue <- vector(length = length(locations.list))
   cpue.list <- vector('list', length = length(locations.list))
