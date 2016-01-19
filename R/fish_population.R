@@ -41,13 +41,6 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   #define number of fish outside
   nfish_outside <- sum(fish_range) - fish_in_loc
 
-#
-#   matrix(subset(fish_area_melted, Var1 %in% row_range & Var2 %in% col_range) ,
-#          nrow = length(row_range))
-#
-#   fish_range <- fish_area[row_range, col_range] #define range to fish...
-#   fish_in_loc <- fish_area[location[1], location[2]] #Number of fish in specified location
-
   #------------------------------------------------------
   #Move fish to specified location
 

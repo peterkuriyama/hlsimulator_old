@@ -28,9 +28,6 @@ conduct_survey <- function(fish_area, location_list, scope, nhooks, ndrops, proc
 
   #Sample at locations with for loop
   for(zz in 1:length(sample_list)){
-# print(zz)
-     # if(zz == 16) browser()
-    # location <- location_list[[zz]]
     temp <- fish_population(fish_area = fish_area, location = location_list[[zz]], scope = scope,
                     nhooks = nhooks, ndrops = ndrops, process = process)
 
