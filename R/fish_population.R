@@ -15,8 +15,7 @@
 #also play with sampling probabilities and movements
 
 fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
-  process){
-# browser()
+  process = 'hypergeometric'){
   #------------------------------------------------------
   #Count fish within the range
   row_range <- (location[1] - scope):(location[1] + scope)
