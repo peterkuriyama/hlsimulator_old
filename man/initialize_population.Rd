@@ -16,12 +16,13 @@ initialize_population(numrow, numcol, nfish = 100, seed = 300, distribute,
 
 \item{seed}{Set seed if distribute == random, defaults to 300}
 
-\item{distribute}{Specify if the fish distribution be 'uniform', 'patchy' or 'random'}
+\item{distribute}{Specify fish distribution to be 'uniform', 'patchy', or 'area' specific}
 
 \item{maxfish}{Maximum number of fish that can be sampled at a time}
 
-\item{area}{Specify area to distribute fish, options are 'upperleft', 'upperright', 'lowerleft', 'lowerright'. 
-Only necessary if distribute == 'random'}
+\item{area}{Specify area to distribute fish, options are 'upperleft', 'upperright', 'lowerleft', 'lowerright',
+'upperhalf', 'lowerhalf', 'righthalf', 'lefthalf' 
+  Only necessary if distribute == 'area'}
 
 \item{percent}{percentage of area to sample. Only necessary if distribute == 'patchy'}
 }
@@ -30,13 +31,22 @@ This function initializes the spatial distribution of the fish population
 }
 \examples{
 
+Uniformly distribute fish
 initialize_population(numrow = 10, numcol = 10, nfish = 1000, distribute = 'uniform')
 
+Distribute fish in upper right quadrant only
 initialize_population(numrow = 10, numcol = 10, nfish = 1000, distribute = 'area',
                             area = 'upperright')
 
+Distribute fish in upper half
+initialize_population(numrow = 10, numcol = 10, nfish = 1000, distribute = 'area',
+                            area = 'upperhalf')
+
+Patchily distribute fish
 initialize_population(numrow = 10, numcol = 10, nfish = 100, distribute = 'patchy',
   percent = .2)
+
+
 }
 \keyword{initialize}
 

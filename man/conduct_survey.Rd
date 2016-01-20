@@ -2,7 +2,10 @@
 % Please edit documentation in R/conduct_survey.R
 \name{conduct_survey}
 \alias{conduct_survey}
-\title{Conduct Survey}
+\title{Conduct Survey
+Wrapper to repeatedly run fish_population function
+Give function arguments for
+This function initializes the spatial distribution of the fish population}
 \usage{
 conduct_survey(fish_area, location_list, scope, nhooks, ndrops,
   process = "hypergeometric")
@@ -21,6 +24,8 @@ conduct_survey(fish_area, location_list, scope, nhooks, ndrops,
 \item{process}{specify process by which fish are sampled, options are 'multinomial' and 'hypergeometric'}
 }
 \description{
+Conduct Survey
+Wrapper to repeatedly run fish_population function
 Give function arguments for
 This function initializes the spatial distribution of the fish population
 }

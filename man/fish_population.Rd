@@ -4,7 +4,8 @@
 \alias{fish_population}
 \title{Fish the Population}
 \usage{
-fish_population(fish_area, location, scope = 1, nhooks, ndrops, process)
+fish_population(fish_area, location, scope = 1, nhooks, ndrops,
+  process = "hypergeometric")
 }
 \arguments{
 \item{fish_area}{Matrix with the distribution of fish}
