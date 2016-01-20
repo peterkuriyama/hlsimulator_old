@@ -5,15 +5,33 @@
 #' @param numcol Number of columns in matrix
 #' @param nfish Number of fish to allocate among matrix
 #' @param seed Set seed if distribute == random, defaults to 300
-#' @param distribute Specify if the fish distribution be 'uniform', 'patchy' or 'random'
+#' @param distribute Specify fish distribution to be 'uniform', 'patchy', or 'area' specific
 #' @param maxfish Maximum number of fish that can be sampled at a time
 #' @param percent percentage of area to sample. Only necessary if distribute == 'patchy'
-#' @param area Specify area to distribute fish, options are 'upperleft', 'upperright', 'lowerleft', 'lowerright'. 
-#'   Only necessary if distribute == 'random'
+#' @param area Specify area to distribute fish, options are 'upperleft', 'upperright', 'lowerleft', 'lowerright',
+#' 'upperhalf', 'lowerhalf' 
+#'   Only necessary if distribute == 'area'
 #' @keywords initialize
 #' @export
 #' @examples 
-#' put example here dude
+#' 
+#' Uniformly distribute fish
+#' initialize_population(numrow = 10, numcol = 10, nfish = 1000, distribute = 'uniform')
+#' 
+#' Distribute fish in upper right quadrant only
+#' initialize_population(numrow = 10, numcol = 10, nfish = 1000, distribute = 'area',
+#'                             area = 'upperright')
+#'
+#' Distribute fish in upper half
+#' initialize_population(numrow = 10, numcol = 10, nfish = 1000, distribute = 'area',
+#'                             area = 'upperhalf')
+#'
+#' Patchily distribute fish
+#' initialize_population(numrow = 10, numcol = 10, nfish = 100, distribute = 'patchy',
+#'   percent = .2)
+#'
+#' 
+
 
 initialize_population <- function(numrow, numcol, nfish = 100, seed = 300, distribute,  
   maxfish = 10, area = 'upperleft', percent = .1){
@@ -49,7 +67,7 @@ initialize_population <- function(numrow, numcol, nfish = 100, seed = 300, distr
     possible.picks <- expand.grid(1:numrow, 1:numcol)
     nsamps <- percent * nrow(possible.picks)
 
-    samp.df <- possible.picks[sample(1:nrow(possible.picks), size = nsamps), ] #hard coded to populate 10 cells now
+    samp.df <- possible.picks[sample(1:nrow(possible.picks), size = nsamps), ] 
   }
     
   #---------------------------------------------------------------------------------------------------------
@@ -77,11 +95,22 @@ initialize_population <- function(numrow, numcol, nfish = 100, seed = 300, distr
       columns <- ((1 + numcol / 2)):numcol
     }
 
+    if(area == 'lowerhalf'){
+      rows <- (1 + numrow / 2):numrow
+      columns <- 1:numcol
+    }
+
+    if(area == 'upperhalf'){
+      rows <- 1:(numrow / 2)
+      columns <- 1:numcol
+    }
+
     #Create specific samp.df for area case
     samp.df <- expand.grid(rows, columns)
     names(samp.df) <- c('x', 'y')
   }
 
+  #---------------------------------------------------------------------------------------------------------
   #Now sample fish
   samp.vec <- vector(length = nfish)
   counter <- 1

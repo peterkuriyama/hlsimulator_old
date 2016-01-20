@@ -3,6 +3,7 @@ setwd("/Users/peterkuriyama/School/Research/hlsimulator")
 library(devtools)
 library(plyr)
 library(reshape2)
+library(ggplot2)
 install_github('peterkuriyama/hlsimulator')
 library(hlsimulator)
 
@@ -17,39 +18,98 @@ library(hlsimulator)
 
 #combining these affects may lead to different results
 
-
 #Check CPUE with different numbers of fish
 #cpues with fish
 #Test simulation
 
 #-------------------------------------------------------------------------------------------
+#turn off movement in and out of cells
+init <- initialize_population(numrow = 10, numcol = 10, nfish = 100000, 
+      distribute = 'uniform', seed = 200)
+
+fish_population(fish_area = init, location = c(1, 1), 
+  scope = 0, nhooks = 15, ndrops = 3)
+
+
+conduct_survey(fish_area = init, location = list(c(1, 1), c(10, 10)), 
+  scope = 0, nhooks = 15, ndrops = 3,
+  process = 'hypergeometric')
+
+
+
+
+
+temp <- conduct_survey(fish_area = init, location_list = , scope = 0, 
+  nhooks = nhooks, ndrops = ndrops)
+
+
+
+
+
+#-------------------------------------------------------------------------------------------
 #Look at number of locations
-locations <- expand.grid(1:10, 1:10)
-locations <- data.frame(x = locations[, 1], y = locations[, 2])
-names(locations) <- c("", "")
 
-set.seed(1)
-locations.list <- sapply(1:100, FUN = function(x) sample(1:100, x, replace = FALSE))
-avg.cpue <- vector(length = length(locations.list))
+cpues <- explore_nlocs_cpue(numrow = 10, numcol = 10, nfish = 2000, seed = 200, 
+  numlocs = 10, distribute = 'patchy',
+  percent = .5, scope = 0)
 
-for(ii in 1:length(locations.list)){
-# print(ii)
-  temp.locs <- vector('list', length = length(locations.list[[ii]]))
-  for(jj in 1:length(temp.locs)){
-    # temp.locs[[jj]] <- locations[locations.list[[ii]][jj], ]
-    temp.locs[[jj]] <- c(locations[locations.list[[ii]][jj], 1], locations[locations.list[[ii]][jj], 2])
-  }
+to.plot <- melt(cpues)
+names(to.plot)[1] <- 'nlocs'
 
-  init <- initialize_population(numrow = 10, numcol = 10, nfish = 1000, distribute = 'uniform',
-                                seed = 300)
+xx <- sapply(to.plot$location, FUN = function(x) eval(parse(text = x)))
 
-  temp <- conduct_survey(fish_area = init, location_list = temp.locs, scope = 1, nhooks = 15, ndrops = 5)
+to.plot$x <- as.vector(xx[1, ])
+to.plot$y <- as.vector(xx[2, ])
 
-  avg.cpue[ii] <- mean(unlist(temp$cpue))
-}
+#Look at nfish also later. 
+
+subset(to.plot, nlocs == 10)
+
+ggplot(subset(to.plot, nlocs == 10), aes(x = x, y = y, colour = value)) + 
+  geom_point(size = 3) + facet_wrap(~ variable) + scale_colour_gradient(low = 'blue', high = 'red') + 
+  theme_bw()
+
+ggplot(subset(to.plot, nlocs == 10), aes(x = variable, y = value, colour = location, 
+  group = location)) + 
+  geom_line()
 
 
-plot(1:100, avg.cpue, type = 'o', pch = 19)
+  geom_point(size = 3) + facet_wrap(~ variable) + scale_colour_gradient(low = 'blue', high = 'red') + 
+  theme_bw()
+
+
+
+
+apply(to.plot, MAR = 1, function(x) eval(parse(text = x[, 'location'])))
+
+to.plot$location <- factor(to.plot$location, levels = unique(to.plot$location))
+
+eval(parse(text = to.plot$location[1]))
+
+
+
+ggplot(to.plot, aes(x = variable, y = value, group = location,
+  colour = location)) + geom_line() + facet_wrap(~ nlocs)
+
+#What do I want to plot?
+# Decline of CPUE as number of fishing locations increases?
+#The more places fished, the faster the decline in cpue?
+ggplot(to.plot, aes(x = variable, y = value, group = nlocs,
+  colour = nlocs)) + geom_line() + facet_wrap(~ location) + 
+  scale_colour_manual(limits = seq(1, 10, by = 1), breaks = 1:10,
+    values = rev(paste0('grey', seq(10, 100, by = 10))))
+
+
+scale_colour_gradient(low = 'white',
+high = 'black')
+
+#Try alternative methods of calculation...
+
+
+
+cpue.list
+
+
 #cpue decreases as more locations are sampled...
 
 
@@ -67,6 +127,8 @@ for(ii in 1:length(nfish.vec)){
   avg.cpue[ii] <- mean(unlist(temp$cpue))
 
 }
+
+
 
 plot(nfish.vec, avg.cpue, type = 'o', pch = 19, yli = c(0, 1), xaxs = 'i',
      yaxs = 'i', xlim = c(0, max(nfish.vec)))
@@ -141,51 +203,6 @@ fish_mat <- initialize_population(numrow = 10, numcol = 10, nfish = 5000, distri
   percent = .5, seed = 301)
 fish_population(fish_area = init, location = c(4, 10), scope = 1,
   nhooks = 15, ndrops = 3, process = 'hypergeometric')
-
-
-#------------------------------------------------------------------------------------------------------------
-
-fish_population(fish_area = init, location = c(4, 10), scope = 1,
-  nhooks = 15, ndrops = 3, process = 'hypergeometric')
-
-niters <- 5
-samples <- vector('list', length = niters)
-
-for(ii in 1:niters){
-  temp <- fish_population(fish_area = init, location = c(4, 10), scope = 1,
-    nhooks = 5, ndrops = 3)
-  init <- temp[[1]]
-  samples[[ii]] <- temp[[2]]
-}
-
-samples1 <- ldply(samples)
-samples2 <- ldply(samples)
-
-
-#------------------------------------------------------
-#Treat fish and hooks as a predator prey relationship
-
-#1. Set number of hooks in particular cell
-#2. Probability of moving into cell with hook
-#3. Probability of biting hook
-#hard code this in so I can actually see if this method works
-# fish.range[2, 1] <- 3
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #------------------------------------------------------
