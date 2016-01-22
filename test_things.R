@@ -2,13 +2,17 @@ setwd("/Users/peterkuriyama/School/Research/hlsimulator")
 
 library(devtools)
 library(plyr)
+library(dplyr)
 library(reshape2)
 library(ggplot2)
 install_github('peterkuriyama/hlsimulator')
 library(hlsimulator)
 
 #------------------------------------------------------------------------------------------------------------
-#Active Development things
+##TO DO
+##Program circular movement function
+##Recruitment functions?
+
 
 #Things that might affect cpue relationship
 #number of locations sampled
@@ -16,31 +20,60 @@ library(hlsimulator)
 #number of fish
 #percentage of distributed fish (if patchy distribution)
 
-#combining these affects may lead to different results
-
-#Check CPUE with different numbers of fish
-#cpues with fish
-#Test simulation
-
 #-------------------------------------------------------------------------------------------
-#turn off movement in and out of cells
-init <- initialize_population(numrow = 10, numcol = 10, nfish = 100000, 
-      distribute = 'uniform', seed = 200)
+#develop function to move fish around ontogenetically or 
+xx <- survey_over_years(numrow = 10, numcol = 10, nfish = 10000, 
+  distribute = 'uniform',
+  seed = 300, nyears = 15, location_list, 
+  random_locations = TRUE, nlocs = 10)
 
-fish_population(fish_area = init, location = c(1, 1), 
-  scope = 0, nhooks = 15, ndrops = 3)
-
-
-conduct_survey(fish_area = init, location = list(c(1, 1), c(10, 10)), 
-  scope = 0, nhooks = 15, ndrops = 3,
-  process = 'hypergeometric')
-
-
-
+#separate elements from each iteration
+#everything a list for now
+fish_list <- lapply(xx, FUN = function(x) x$sampled_area)
+fish_melt <- melt(fish_list)
+names(fish_melt) <- c('row', 'column', 'nfish', 'year')
+fish_melt$density <- fish_melt$nfish / 100
 
 
-temp <- conduct_survey(fish_area = init, location_list = , scope = 0, 
-  nhooks = nhooks, ndrops = ndrops)
+ggplot(fish_melt, aes(x = row, y = column)) + geom_raster(aes(fill = density)) + 
+  facet_wrap(~ year)
+
+
+ggplot(fish_melt)
+
+
+melt(fish_list)
+melt(fish_list[[1]])
+
+ggplot(fish_list[[1]] aes(x))
+
+
+
+
+cpue_list <- lapply(xx, FUN = function(x) x$cpue)
+
+
+
+
+#extract number of fish in each year
+  nfish <- sapply(xx, FUN = function(x) {
+    sum(unlist(x$sampled_area))
+  })
+  cpue <- sapply(xx, FUN = function(x) {
+    mean(unlist(x$cpue[, 2:4]))
+  })
+
+plot(nfish, cpue, pch = 19, type = 'o')
+
+
+
+to.plot <- lapply(xx, FUN = function(x) x$cpue)
+sapply(to.plot, FUN = function(x) mean(unlist(x[, 2:4])))
+
+
+survey_over_years(nfish = 10000, distribute = 'uniform', seed = 300, nyears = 15,
+  random_locations = TRUE, nlocs = 10)
+
 
 
 
@@ -150,7 +183,8 @@ for(ii in 1:length(nfish.vec)){
 
 }
 
-plot(nfish.vec, avg.cpue, type = 'o', pch = 19, yli = c(0, 1), xaxs = 'i',
+
+plot(nfish.vec, avg.cpue, type = 'o', pch = 19, ylim = c(0, 1), xaxs = 'i',
      yaxs = 'i', xlim = c(0, max(nfish.vec)))
 
 png(file = '/Users/peterkuriyama/Desktop/hl_cpue_check.png')
@@ -166,43 +200,6 @@ conduct_survey(fish_area = init, location_list = list(c(4, 10),
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-initialize_population(numrow = 10, numcol = 10, nfish = 1000, distribute = 'uniform')
-
-initialize_population(numrow = 10, numcol = 10, nfish = 1000, distribute = 'area',
-                            area = 'upperright')
-
-initialize_population(numrow = 10, numcol = 10, nfish = 100, distribute = 'patchy',
-  percent = .2)
-
-
-fish_population(fish_area = init, location = c(4, 10), scope = 1, nhooks = 15,
-  ndrops = 3)
-
-
-init <- initialize_population(numrow = 10, numcol = 10, nfish = 5000, distribute = 'patchy',
-                              percent = .5, seed = 301)
-
-conduct_survey(fish_area = init, location_list = list(c(4, 10),
-                                                      c(8, 2),
-                                                      c(3, 3)),
-               scope = 1, nhooks = 15, ndrops = 5)
-
-
-fish_mat <- initialize_population(numrow = 10, numcol = 10, nfish = 5000, distribute = 'patchy',
-  percent = .5, seed = 301)
-fish_population(fish_area = init, location = c(4, 10), scope = 1,
-  nhooks = 15, ndrops = 3, process = 'hypergeometric')
 
 
 #------------------------------------------------------
