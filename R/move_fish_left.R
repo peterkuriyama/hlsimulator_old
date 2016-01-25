@@ -38,6 +38,16 @@ move_fish_left <- function(fish_area, max_prob = 0.5, min_prob = 0.05){
   moving <- fish_area_df[, c('row', 'column', 'sampled')]
   moving$column <- moving$column - 1
   moving[which(moving$column == 0), 'column'] <- 1
+  moving$column <- as.integer(moving$column)
+browser()
+  moving %>% group_by(row, column) %>% mutate(sampled = sum(sampled))
+
+  moving %>% 
+              group_by(row, column) %>% 
+              summarise(sampled = sum(sampled)) %>% 
+              as.data.frame
+
+
   moving <- moving %>% 
               group_by(row, column) %>% 
               summarise(sampled = sum(sampled)) %>% 

@@ -33,7 +33,8 @@
 #' 
 
 survey_over_years <- function(numrow = 10, numcol = 10, nfish = 1000, distribute,
-  seed = 300, nyears = 15, location_list, random_locations = FALSE, nlocs = 10){
+  seed = 300, nyears = 15, location_list, random_locations = FALSE, nlocs = 10,
+  move_func = move_fish_left){
 
   init <- initialize_population(numrow = numrow, numcol = numcol, nfish = nfish, 
         distribute = distribute, seed = seed)
@@ -66,7 +67,7 @@ survey_over_years <- function(numrow = 10, numcol = 10, nfish = 1000, distribute
     cpue_list[[ii]] <- cpue
 
     temp_area <- temp$sampled_area
-    temp <- move_fish_left(temp_area)
+    temp <- move_func(temp_area)
     temp_area <- temp$final
 
   }

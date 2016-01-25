@@ -1,5 +1,5 @@
 #' Conduct Survey
-#'
+#' Wrapper to repeatedly run fish_population function
 #' Give function arguments for
 #' This function initializes the spatial distribution of the fish population
 
@@ -15,8 +15,6 @@
 #' put example here dude
 #'
 
-
-
 conduct_survey <- function(fish_area, location_list, scope, nhooks, ndrops, process = 'hypergeometric'){
 
   #keep initial population matrix
@@ -25,7 +23,7 @@ conduct_survey <- function(fish_area, location_list, scope, nhooks, ndrops, proc
   #Name sample list
   sample_list <- vector('list', length = length(location_list))
   names(sample_list) <- paste(location_list)
-
+# browser()
   #Sample at locations with for loop
   for(zz in 1:length(sample_list)){
     temp <- fish_population(fish_area = fish_area, location = location_list[[zz]], scope = scope,

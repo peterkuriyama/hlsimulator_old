@@ -17,6 +17,7 @@
 fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   process = 'hypergeometric'){
   #------------------------------------------------------
+# browser()
   #Count fish within the range
   row_range <- (location[1] - scope):(location[1] + scope)
   row_range <- row_range[row_range %in% 1:nrow(fish_area)]
@@ -80,8 +81,7 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   #------------------------------------------------------
   #Now fish in specified cell, called zero.index
   fish_to_catch <- fish_df[zero_index, 'moved']
-# browser()
-
+  #--------Hypergeometric
   if(process == 'hypergeometric'){
     ###in rhyper
     #n is number of failures
@@ -95,10 +95,9 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
       samples[qq] <- rhyper(n = nhooks, m = fish_to_catch, k = nhooks, nn = 1)
       fish_to_catch <- fish_to_catch - samples[qq] #remove caught fish
     }
-
   }
 
-
+  #--------Multinomial
   #multinomial process is still really in development
   if(process == 'multinomial'){
     hookProbs <- rep(1 / (nhooks + 1), (nhooks + 1)) #All Hooks have equal probability
@@ -114,10 +113,10 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
       hookProbs[1] <- hookProbs[1] + hookProbs[which(catches[, ii] == 1)]
       hookProbs[which(catches[, ii] == 1)] <- 0
     }
-
    }
   }
 
+  #------------------------------------------------------
   #Update number of fish in each cell
   fish_df$fished <- fish_df$moved
   fish_df[zero_index, 'fished'] <- fish_to_catch
@@ -128,6 +127,7 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
 
   #if there are fish that can move back, move them
   if(fish_to_catch != 0){
+
     #movement back to cells is based on proportions that moved in
     move_back_probs <- fish_df$moving
     move_back_probs[zero_index] <- fish_df[zero_index, 'value']
