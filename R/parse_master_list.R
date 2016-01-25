@@ -26,6 +26,8 @@ parse_master_list <- function(master_list){
   #number of samples
   nsamples <- subset(temp, output_type == 'samples')
   nsamples <- nsamples[, which(names(nsamples) %in% c('row', 'column', 'output_type') == FALSE)]
+  nsamples$row <- sapply(nsamples$location, function(x) eval(parse(text = x))[1])
+  nsamples$column <- sapply(nsamples$location, function(x) eval(parse(text = x))[2])
 
   #number of fish after sampling
   end_nfish <- subset(temp, output_type == 'sampled_area')
@@ -36,6 +38,8 @@ parse_master_list <- function(master_list){
   cpue <- subset(temp, output_type == 'cpue')
   cpue <- cpue[, which(names(cpue) %in% 
     c('row', 'column', 'output_type') == FALSE)]  
+  cpue$row <- sapply(cpue$location, function(x) eval(parse(text = x))[1])
+  cpue$column <- sapply(cpue$location, function(x) eval(parse(text = x))[2])
 
   return(list(init_nfish = init_nfish, end_nfish = end_nfish, samples = nsamples, cpue = cpue))
 
