@@ -10,6 +10,7 @@ library(hlsimulator)
 
 #------------------------------------------------------------------------------------------------------------
 ##TO DO
+#*Figure out how to add package dependencies
 ##Program circular movement function
 ##Recruitment functions?
 
@@ -21,11 +22,34 @@ library(hlsimulator)
 #percentage of distributed fish (if patchy distribution)
 
 #-------------------------------------------------------------------------------------------
+#Move fish cw
+fish_area1 <- initialize_population(distribute = 'area', area = 'upperright', numrow = 10, numcol = 10,
+  nfish = 1000)
+
+tt <- fish_area1
+ttp <- vector('list', length = 8)
+for(ll in 1:8){
+  temp <- move_fish_cw(fish_area = tt, move_prob = .8)
+  tt <- temp$final
+  ttp[[ll]] <- tt
+}
+
+ttp <- melt(ttp)
+
+ggplot(ttp, aes(x = Var1, y = Var2)) + geom_raster(aes(fill = value)) + 
+  theme_bw() + facet_wrap(~ L1)
+
+ggplot(ttp[1], )
+
+move_fish_cw(fish_area = fish_area1, move_prob = .8)
+
+
+#-------------------------------------------------------------------------------------------
 #develop function to move fish around ontogenetically or 
 xx <- survey_over_years(numrow = 10, numcol = 10, nfish = 10000, 
   distribute = 'uniform',
   seed = 300, nyears = 15, location_list, 
-  random_locations = TRUE, nlocs = 10)
+  random_locations = TRUE, nlocs = 10, move_func = move_fish_cw)
 
 #separate elements from each iteration
 #everything a list for now
