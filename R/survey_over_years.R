@@ -34,7 +34,7 @@
 
 survey_over_years <- function(numrow = 10, numcol = 10, nfish = 1000, distribute,
   seed = 300, nyears = 15, location_list, random_locations = FALSE, nlocs = 10,
-  move_func, ...){
+  move_func, nhooks, ndrops, ...){
 # browser()
   init <- initialize_population(numrow = numrow, numcol = numcol, nfish = nfish, 
         distribute = distribute, seed = seed)
@@ -66,13 +66,13 @@ survey_over_years <- function(numrow = 10, numcol = 10, nfish = 1000, distribute
   for(ii in 1:nyears){
     if(random_locations == TRUE){
       temp <- conduct_survey(fish_area = temp_area, location = location_list[[ii]], 
-            scope = 0, nhooks = 15, ndrops = 3,
+            scope = 0, nhooks = nhooks, ndrops = ndrops,
             process = 'hypergeometric')  
     }
 
     if(random_locations == FALSE){
      temp <- conduct_survey(fish_area = temp_area, location = location_list, 
-            scope = 0, nhooks = 15, ndrops = 3,
+            scope = 0, nhooks = nhooks, ndrops = ndrops,
             process = 'hypergeometric')   
     }
     
