@@ -10,8 +10,6 @@ Depends:
     R (>= 3.1.2)
 License: What license is it under?
 LazyData: true
-Suggest:
-  reshape2
 Imports:
   plyr,
   dplyr,
