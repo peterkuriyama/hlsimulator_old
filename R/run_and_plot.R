@@ -27,7 +27,7 @@
 
 run_and_plot <- function(numrow = 10, numcol = 10, nfish = 1000, distribute,
   seed = 300, nyears = 15, location_list, random_locations = FALSE, nlocs = 10,
-  move_func, nhooks, ndrops, ...){
+  move_func, nhooks, ndrops, scope = 0, ...){
 
   if(is.character(move_func) == FALSE) stop('movement function must be character string')
   move_func_name <- move_func
@@ -37,7 +37,8 @@ run_and_plot <- function(numrow = 10, numcol = 10, nfish = 1000, distribute,
               distribute = distribute,
               seed = seed, nyears = nyears, location_list = location_list, 
               random_locations = random_locations, nlocs = nlocs, 
-              move_func = move_func, nhooks = nhooks, ndrops = ndrops, ...)
+              move_func = move_func, nhooks = nhooks, ndrops = ndrops, 
+              scope = scope, ...)
               
 
   run <- parse_master_list(run)
