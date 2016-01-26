@@ -35,19 +35,27 @@
 survey_over_years <- function(numrow = 10, numcol = 10, nfish = 1000, distribute,
   seed = 300, nyears = 15, location_list, random_locations = FALSE, nlocs = 10,
   move_func, ...){
-  
+# browser()
   init <- initialize_population(numrow = numrow, numcol = numcol, nfish = nfish, 
         distribute = distribute, seed = seed)
-
+  
   #Specify locations to fish if random locations is TRUE
   if(random_locations == TRUE){
     potential_location <- expand.grid(1:numrow, 1:numcol)
-    sampled <- base::sample(1:nrow(potential_location), replace = FALSE, size = nlocs)
-    location_list <- potential_location[sampled, ]
-    location_list <- split(location_list, f = seq(nrow(location_list)))
-    location_list <- lapply(location_list, FUN = function(x) c(as.numeric(x[1]), 
-      as.numeric(x[2])))
-    names(location_list) <- NULL
+    
+    location_list <- vector('list', length = nyears)
+
+    for(pp in 1:nyears){
+      sampled <- base::sample(1:nrow(potential_location), replace = FALSE, size = nlocs)
+      temp_list <- potential_location[sampled, ]
+      temp_list <- split(temp_list, f = seq(nrow(temp_list)))
+      temp_list <- lapply(temp_list, FUN = function(x) c(as.numeric(x[1]), 
+        as.numeric(x[2])))
+      names(temp_list) <- NULL
+
+      location_list[[pp]] <- temp_list
+    }
+    
   }
 
   #conduct nyears iterations
@@ -56,9 +64,18 @@ survey_over_years <- function(numrow = 10, numcol = 10, nfish = 1000, distribute
   cpue_list <- vector('list', length = nyears)
 
   for(ii in 1:nyears){
-    temp <- conduct_survey(fish_area = temp_area, location = location_list, 
+    if(random_locations == TRUE){
+      temp <- conduct_survey(fish_area = temp_area, location = location_list[[ii]], 
             scope = 0, nhooks = 15, ndrops = 3,
-            process = 'hypergeometric')
+            process = 'hypergeometric')  
+    }
+
+    if(random_locations == FALSE){
+     temp <- conduct_survey(fish_area = temp_area, location = location_list, 
+            scope = 0, nhooks = 15, ndrops = 3,
+            process = 'hypergeometric')   
+    }
+    
     master_list[[ii]] <- temp
 
     cpue <- temp$cpue
