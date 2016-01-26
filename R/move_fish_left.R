@@ -12,10 +12,6 @@
 #' 
 
 move_fish_left <- function(fish_area, max_prob = 0.5, min_prob = 0.05){
-  #Print check to make sure using the right movement function
-  print('moving fish left')
-
-
   numrow <- nrow(fish_area)
   numcol <- ncol(fish_area)
 
