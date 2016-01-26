@@ -11,9 +11,8 @@ library(hlsimulator)
 #------------------------------------------------------------------------------------------------------------
 ##TO DO
 #*Figure out how to add package dependencies
-##Program circular movement function
 ##Recruitment functions?
-
+##Set seed just once in survey_over_years function
 
 #Things that might affect cpue relationship
 #number of locations sampled
@@ -22,34 +21,60 @@ library(hlsimulator)
 #percentage of distributed fish (if patchy distribution)
 
 #-------------------------------------------------------------------------------------------
-#Move fish cw
-fish_area1 <- initialize_population(distribute = 'area', area = 'upperright', numrow = 10, numcol = 10,
-  nfish = 1000)
+#high level wrapper to run and plot
 
-tt <- fish_area1
-ttp <- vector('list', length = 8)
-for(ll in 1:8){
-  temp <- move_fish_cw(fish_area = tt, move_prob = .8)
-  tt <- temp$final
-  ttp[[ll]] <- tt
-}
+run_and_plot(numrow = 10, numcol = 10, nfish = 1000,
+  distribute = 'uniform', seed = 300, nyears = 15, random_locations = TRUE, 
+  nlocs = 10, move_func = 'move_fish_cw', move_prob = .8)
 
-ttp <- melt(ttp)
 
-ggplot(ttp, aes(x = Var1, y = Var2)) + geom_raster(aes(fill = value)) + 
-  theme_bw() + facet_wrap(~ L1)
+run_and_plot(numrow = 10, numcol = 10, nfish = 10000,
+  distribute = 'uniform', seed = 300, nyears = 15, random_locations = TRUE, 
+  nlocs = 10, move_func = 'move_fish_left', max_prob = .2, min_prob = .01)
 
-ggplot(ttp[1], )
 
-move_fish_cw(fish_area = fish_area1, move_prob = .8)
+
+
+
+
+
+
+
+
+
+
+
 
 
 #-------------------------------------------------------------------------------------------
 #develop function to move fish around ontogenetically or 
-xx <- survey_over_years(numrow = 10, numcol = 10, nfish = 10000, 
+xx <- survey_over_years(numrow = 10, numcol = 10, nfish = 100000, 
   distribute = 'uniform',
   seed = 300, nyears = 15, location_list, 
-  random_locations = TRUE, nlocs = 10, move_func = move_fish_cw)
+  random_locations = TRUE, nlocs = 100, move_func = move_fish_cw, move_prob = .8)
+
+
+
+thing <- parse_master_list(xx)
+
+nfish_cpue <- merge(thing$end_nfish %>% group_by(year) %>% summarise(nfish = sum(value)),
+      cpue %>% group_by(year) %>% summarise(cpue = mean(value)) %>% as.data.frame,
+      by = 'year')
+
+
+plot(nfish_cpue$nfish, nfish_cpue$cpue, ylim = c(0, 1), pch = 19,
+  xaxs = 'i', yaxs = 'i', xlim = c(0, max(pretty(nfish_cpue$nfish))))
+
+
+ggplot(cpue, aes(x = variable, y = value, colour = year, group = year)) + geom_line() + 
+  facet_wrap(~ location) + scale_color_gradientn(colors = gray.colors(length(cpue$year)))
+
+
+
+
+
+
+
 
 #separate elements from each iteration
 #everything a list for now
@@ -62,22 +87,14 @@ fish_melt$density <- fish_melt$nfish / 100
 ggplot(fish_melt, aes(x = row, y = column)) + geom_raster(aes(fill = density)) + 
   facet_wrap(~ year)
 
-
 ggplot(fish_melt)
-
 
 melt(fish_list)
 melt(fish_list[[1]])
 
 ggplot(fish_list[[1]] aes(x))
 
-
-
-
 cpue_list <- lapply(xx, FUN = function(x) x$cpue)
-
-
-
 
 #extract number of fish in each year
   nfish <- sapply(xx, FUN = function(x) {
@@ -89,18 +106,12 @@ cpue_list <- lapply(xx, FUN = function(x) x$cpue)
 
 plot(nfish, cpue, pch = 19, type = 'o')
 
-
-
 to.plot <- lapply(xx, FUN = function(x) x$cpue)
 sapply(to.plot, FUN = function(x) mean(unlist(x[, 2:4])))
 
 
 survey_over_years(nfish = 10000, distribute = 'uniform', seed = 300, nyears = 15,
   random_locations = TRUE, nlocs = 10)
-
-
-
-
 
 
 #-------------------------------------------------------------------------------------------
@@ -117,78 +128,6 @@ xx <- sapply(to.plot$location, FUN = function(x) eval(parse(text = x)))
 
 to.plot$x <- as.vector(xx[1, ])
 to.plot$y <- as.vector(xx[2, ])
-
-#Look at nfish also later. 
-
-subset(to.plot, nlocs == 10)
-
-ggplot(subset(to.plot, nlocs == 10), aes(x = x, y = y, colour = value)) + 
-  geom_point(size = 3) + facet_wrap(~ variable) + scale_colour_gradient(low = 'blue', high = 'red') + 
-  theme_bw()
-
-ggplot(subset(to.plot, nlocs == 10), aes(x = variable, y = value, colour = location, 
-  group = location)) + 
-  geom_line()
-
-
-  geom_point(size = 3) + facet_wrap(~ variable) + scale_colour_gradient(low = 'blue', high = 'red') + 
-  theme_bw()
-
-
-
-
-apply(to.plot, MAR = 1, function(x) eval(parse(text = x[, 'location'])))
-
-to.plot$location <- factor(to.plot$location, levels = unique(to.plot$location))
-
-eval(parse(text = to.plot$location[1]))
-
-
-
-ggplot(to.plot, aes(x = variable, y = value, group = location,
-  colour = location)) + geom_line() + facet_wrap(~ nlocs)
-
-#What do I want to plot?
-# Decline of CPUE as number of fishing locations increases?
-#The more places fished, the faster the decline in cpue?
-ggplot(to.plot, aes(x = variable, y = value, group = nlocs,
-  colour = nlocs)) + geom_line() + facet_wrap(~ location) + 
-  scale_colour_manual(limits = seq(1, 10, by = 1), breaks = 1:10,
-    values = rev(paste0('grey', seq(10, 100, by = 10))))
-
-
-scale_colour_gradient(low = 'white',
-high = 'black')
-
-#Try alternative methods of calculation...
-
-
-
-cpue.list
-
-
-#cpue decreases as more locations are sampled...
-
-
-
-avg.cpue <- nfish.vec
-
-
-for(ii in 1:length(nfish.vec)){
-  init <- initialize_population(numrow = 10, numcol = 10, nfish = nfish.vec[ii], distribute = 'uniform',
-                                percent = .3, seed = 301)
-
-  temp <- conduct_survey(fish_area = init, location_list = list(c(4, 10),
-                                                                c(8, 2),
-                                                                c(3, 3)), scope = 1, nhooks = 15, ndrops = 5)
-  avg.cpue[ii] <- mean(unlist(temp$cpue))
-
-}
-
-
-
-plot(nfish.vec, avg.cpue, type = 'o', pch = 19, yli = c(0, 1), xaxs = 'i',
-     yaxs = 'i', xlim = c(0, max(nfish.vec)))
 
 
 #-------------------------------------------------------------------------------------------
@@ -221,8 +160,6 @@ conduct_survey(fish_area = init, location_list = list(c(4, 10),
                                                       c(8, 2),
                                                       c(3, 3)),
                scope = 1, nhooks = 15, ndrops = 5)
-
-
 
 
 
@@ -307,6 +244,28 @@ conduct_survey(fish_area = init, location_list = list(c(4, 10),
 # # while(sum(fish) > nfish.range){
 # #   fish <- rbinom(n = nhooks, size = 1, prob = hook.prob)
 # # }
+
+#-------------------------------------------------------------------------------------------
+#Move fish cw
+# fish_area1 <- initialize_population(distribute = 'area', area = 'upperright', numrow = 10, numcol = 10,
+#   nfish = 1000)
+
+# tt <- fish_area1
+# ttp <- vector('list', length = 8)
+# for(ll in 1:8){
+#   temp <- move_fish_cw(fish_area = tt, move_prob = .8)
+#   tt <- temp$final
+#   ttp[[ll]] <- tt
+# }
+
+# ttp <- melt(ttp)
+
+# ggplot(ttp, aes(x = Var1, y = Var2)) + geom_raster(aes(fill = value)) + 
+#   theme_bw() + facet_wrap(~ L1)
+
+# ggplot(ttp[1], )
+
+# move_fish_cw(fish_area = fish_area1, move_prob = .8)
 
 
 
