@@ -13,7 +13,7 @@
 #'thing <- parse_master_list(xx)
 
 parse_master_list <- function(master_list){
-  temp <- melt(master_list)
+  temp <- suppressMessages(melt(master_list))
   names(temp) <- c('row', 'column', 'value', 'location', 'variable',
     'output_type', 'year')
 
