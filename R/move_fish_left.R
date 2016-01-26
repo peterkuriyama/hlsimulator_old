@@ -25,7 +25,6 @@ move_fish_left <- function(fish_area, max_prob = 0.5, min_prob = 0.05){
   probs <- seq(max_prob, min_prob, length.out = length(which(col_fish != 0)))
   prob_fish[prob_fish != 0] <- probs
   
-  print(prob_fish)
   #Sample number of moving fish based on column
   fish_area_df$sampled <- apply(fish_area_df, MAR = 1, function(x) rbinom(n = 1, size = x['nfish'], 
     prob = prob_fish[x[2]]))
