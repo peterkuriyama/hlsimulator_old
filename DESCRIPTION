@@ -1,10 +1,20 @@
 Package: hlsimulator
-Title: What the Package Does (one line, title case)
+Title: Simulate Hook and Line Survey
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Authors@R: person("Peter", "Kuriyama", email = "ptrkrym@uw.edu", 
+  role = c("aut", "cre"))
+Description: Simulate the Southern California hook and line survey. Can manipulate
+  number of fish, distribution of fish, and sampling configurations. Sampling configurations
+  may be fixed sites, or random locations fixed through time. 
 Depends:
     R (>= 3.1.2)
 License: What license is it under?
 LazyData: true
+Suggest:
+  reshape2
+Imports:
+  plyr,
+  dplyr,
+  reshape2,
+  ggplot2
 RoxygenNote: 5.0.1
