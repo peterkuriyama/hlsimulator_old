@@ -10,7 +10,7 @@
 #' @examples 
 #' 
 
-move_fish_cw <- function(fish_area, move_prob, seed = 300){
+move_fish_cw <- function(fish_area, move_prob, seed = 300, ...){
   numrow <- nrow(fish_area)
   numcol <- ncol(fish_area)
   

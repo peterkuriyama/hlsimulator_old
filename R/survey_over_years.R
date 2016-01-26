@@ -34,8 +34,8 @@
 
 survey_over_years <- function(numrow = 10, numcol = 10, nfish = 1000, distribute,
   seed = 300, nyears = 15, location_list, random_locations = FALSE, nlocs = 10,
-  move_func = move_fish_left, ...){
-
+  move_func, ...){
+  
   init <- initialize_population(numrow = numrow, numcol = numcol, nfish = nfish, 
         distribute = distribute, seed = seed)
 
@@ -55,7 +55,6 @@ survey_over_years <- function(numrow = 10, numcol = 10, nfish = 1000, distribute
   master_list <- vector('list', length = nyears)
   cpue_list <- vector('list', length = nyears)
 
-
   for(ii in 1:nyears){
     temp <- conduct_survey(fish_area = temp_area, location = location_list, 
             scope = 0, nhooks = 15, ndrops = 3,
@@ -72,18 +71,6 @@ survey_over_years <- function(numrow = 10, numcol = 10, nfish = 1000, distribute
 
   }
   
-  # cpues <- ldply(cpue_list)
-  # cpues <- melt(cpues, id = c('location', 'year'))
-  # nchange <- sapply(master_list, function(x) sum(x$sampled_area))
-  # # cpues$nfish <- nchange
-
-  # cpues %>% 
-  #   group_by(year) %>% 
-  #   summarise(mm = mean(value)) %>% 
-  #   as.data.frame %>% 
-  #   mutate(nfish = nchange) %>% 
-  #   ggplot(aes(x = nfish, y = mm)) + geom_line()
-
-  #return cpues
+  #return master_list
   return(master_list)
 }

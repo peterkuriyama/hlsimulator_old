@@ -12,6 +12,10 @@
 #' 
 
 move_fish_left <- function(fish_area, max_prob = 0.5, min_prob = 0.05){
+  #Print check to make sure using the right movement function
+  print('moving fish left')
+
+
   numrow <- nrow(fish_area)
   numcol <- ncol(fish_area)
 
@@ -39,7 +43,7 @@ move_fish_left <- function(fish_area, max_prob = 0.5, min_prob = 0.05){
   moving$column <- moving$column - 1
   moving[which(moving$column == 0), 'column'] <- 1
   moving$column <- as.integer(moving$column)
-browser()
+  
   moving %>% group_by(row, column) %>% mutate(sampled = sum(sampled))
 
   moving %>% 
