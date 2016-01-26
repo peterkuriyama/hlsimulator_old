@@ -45,7 +45,8 @@ run_and_plot <- function(numrow = 10, numcol = 10, nfish = 1000, distribute,
 
   plot_annual_cpue_nfish(parsed_list = run, nfish = nfish,
     distribute = distribute, seed = seed, nyears = nyears, 
-    nlocs = nlocs, move_func_name = move_func_name, ...)
+    nlocs = nlocs, move_func_name = move_func_name, nhooks = nhooks,
+    ndrops = ndrops, scope = scope, ...)
 
   return(run)
 }

@@ -12,7 +12,6 @@
 
 plot_annual_cpue_nfish <- function(parsed_list, cex.axis = 1.2, text_space = .25, ...){
 
-
   nfish_cpue <- merge(parsed_list$end_nfish %>% 
                         group_by(year) %>% 
                         summarise(nfish = sum(value)),
@@ -36,6 +35,10 @@ plot_annual_cpue_nfish <- function(parsed_list, cex.axis = 1.2, text_space = .25
 
   perc_sampled <- nlocs / nlocs_total
   rand <- get('random_locations', parent.frame())
+  nhooks <- dot_args$nhooks
+  ndrops <- dot_args$ndrops
+  scope <- dot_args$scope
+
 
   plot(nfish_cpue$nfish, nfish_cpue$cpue, ylim = c(0, 1), pch = 19,
     xaxs = 'i', yaxs = 'i', xlim = c(0, nfish), type = 'o', axes = FALSE,
@@ -45,7 +48,7 @@ plot_annual_cpue_nfish <- function(parsed_list, cex.axis = 1.2, text_space = .25
   axis(side = 1, at = pretty(0:nfish),
     labels = format(pretty(0:nfish), big.mark = ',', scientific = FALSE),
     cex.axis = cex.axis)
-# browser()
+
   mtext(side = 1, outer = T, "True Number of Fish", line = -2, cex = cex.axis * 1.3)
   mtext(side = 2, outer = T, "CPUE (nfish / nhooks)", line = -1.5, cex = cex.axis * 1.3)
   # mtext(side = 2, outer = T, "CPUE (nfish / nhooks)")
@@ -77,6 +80,11 @@ plot_annual_cpue_nfish <- function(parsed_list, cex.axis = 1.2, text_space = .25
     mtext(side = 3, 'Random Location Sampling', 
       adj = .01, line = -spacing[5], cex = cex.axis * .8)
   }
+
+
+  mtext(side = 3, paste0(nhooks, ' hooks, ', ndrops, ' drops, ', 
+    'fish move from ', scope, ' cells' ), adj = .01, line = -spacing[6],
+    cex = cex.axis * .8)
 
 }
 
