@@ -8,7 +8,7 @@
 #' @examples 
 #' 
 
-move_fish_none <- function(fish_area){
+move_fish_none <- function(fish_area, ...){
   final <- fish_area
   return(list(init = fish_area, final = final))
 }

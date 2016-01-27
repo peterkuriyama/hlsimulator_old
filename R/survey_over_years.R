@@ -37,7 +37,7 @@ survey_over_years <- function(numrow = 10, numcol = 10, nfish = 1000, distribute
   move_func, nhooks, ndrops, scope, ...){
 # browser()
   init <- initialize_population(numrow = numrow, numcol = numcol, nfish = nfish, 
-        distribute = distribute, seed = seed)
+        distribute = distribute, seed = seed, ...)
   
   #Specify locations to fish if random locations is TRUE
   if(random_locations == TRUE){
@@ -83,6 +83,7 @@ survey_over_years <- function(numrow = 10, numcol = 10, nfish = 1000, distribute
     cpue_list[[ii]] <- cpue
 
     temp_area <- temp$sampled_area
+# browser()
     temp <- move_func(temp_area, ...)
     temp_area <- temp$final
 
