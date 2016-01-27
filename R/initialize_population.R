@@ -34,7 +34,7 @@
 
 
 initialize_population <- function(numrow, numcol, nfish = 100, seed = 300, distribute,  
-  maxfish = 10, area = 'upperleft', percent = .1){
+  maxfish = 10, area = 'upperleft', percent = .1, ...){
 
   #initial check
   if(distribute %in% c('area', 'patchy', 'uniform') == FALSE){
