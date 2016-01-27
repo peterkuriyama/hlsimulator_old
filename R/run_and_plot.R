@@ -27,7 +27,8 @@
 
 run_and_plot <- function(numrow = 10, numcol = 10, nfish = 1000, distribute,
   seed = 300, nyears = 15, location_list, random_locations = FALSE, nlocs = 10,
-  move_func, nhooks, ndrops, scope = 0, pdf = FALSE, ...){
+  move_func, nhooks, ndrops, scope = 0, pdf = FALSE,
+  png = FALSE, ...){
 
   if(is.character(move_func) == FALSE) stop('movement function must be character string')
   move_func_name <- move_func
@@ -49,12 +50,19 @@ run_and_plot <- function(numrow = 10, numcol = 10, nfish = 1000, distribute,
     pdf(width = 7, height = 7, file = pdf_name)
   }
 
+  if(png == TRUE){
+    fn <- strsplit(move_func_name, split = '_')[[1]][3]
+    png_name <- paste0('figs/', paste0(distribute, '_', nfish, '_', fn, '.png'))
+    png(width = 7, height = 7, file = png_name, units = 'in', 
+      res = 300)
+  }
+
   plot_annual_cpue_nfish(parsed_list = run, nfish = nfish,
     distribute = distribute, seed = seed, nyears = nyears, 
     nlocs = nlocs, move_func_name = move_func_name, nhooks = nhooks,
     ndrops = ndrops, scope = scope, ...)
 
-  if(pdf == TRUE) dev.off() 
+  if(pdf + png > 0) dev.off() 
 
   return(run)
 }
