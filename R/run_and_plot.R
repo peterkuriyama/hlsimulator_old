@@ -46,13 +46,13 @@ run_and_plot <- function(numrow = 10, numcol = 10, nfish = 1000, distribute,
 
   if(pdf == TRUE){
     fn <- strsplit(move_func_name, split = '_')[[1]][3]
-    pdf_name <- paste0('figs/', paste0(distribute, '_', nfish, '_', fn, '.pdf'))
+    pdf_name <- paste0('figs/', paste0(distribute, '_', nlocs, 'locs', '_', nfish, 'fish_', fn, '.pdf'))
     pdf(width = 7, height = 7, file = pdf_name)
   }
 
   if(png == TRUE){
     fn <- strsplit(move_func_name, split = '_')[[1]][3]
-    png_name <- paste0('figs/', paste0(distribute, '_', nfish, '_', fn, '.png'))
+    png_name <- paste0('figs/', paste0(distribute, '_', nlocs, 'locs', '_', nfish, 'fish_', fn, '.png'))
     png(width = 7, height = 7, file = png_name, units = 'in', 
       res = 300)
   }
