@@ -5,14 +5,17 @@ library(plyr)
 library(dplyr)
 library(reshape2)
 library(ggplot2)
-install_github('peterkuriyama/hlsimulator')
+# install_github('peterkuriyama/hlsimulator')
+load_all('../hlsimulator')
 library(hlsimulator)
 
-#------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------
 ##TO DO
-#*Figure out how to add package dependencies
+
+##Put in no movement function
+## Depends on how much of population we sample
 ##Recruitment functions?
-##Set seed just once in survey_over_years function
+
 
 #Things that might affect cpue relationship
 #number of locations sampled
@@ -21,12 +24,302 @@ library(hlsimulator)
 #percentage of distributed fish (if patchy distribution)
 
 #-------------------------------------------------------------------------------------------
+
+
+
+#-------------------------------------------------------------------------------------------
+#NO recruitment and strong local depletion effects with year after year sampling
+
+#-------------------------------------------------------------------------------------------
+##Compare the effect of fish movement on fixed location sampling
+#Specify 10 locations
+location_list1 <- list(c(2, 2), 
+                       c(3, 1),
+                       c(3, 4),
+                       c(3, 7),
+                       c(4, 9),
+                       c(2, 6),
+                       c(7, 1),
+                       c(9, 3),
+                       c(8, 5),
+                       c(8, 7),
+                       c(9, 10),
+                       c(10, 6)
+                       )
+
+pdf(width = 13, height = 5.65, 
+  file = 'figs/fixed_location_different_movement.pdf')
+par(mfcol = c(1, 3), oma = c(2, 2, 0, 0))
+
+#no fish movement and uniform initial distribution
+pp1 <- run_and_plot(numrow = 10, 
+                   numcol = 10, 
+                   nfish = 5000,
+                   distribute = 'uniform',
+                   seed = 302,
+                   nyears = 15, 
+                   random_locations = FALSE,
+                   location_list = location_list1, 
+                   nlocs = 12, 
+                   move_func = 'move_fish_none', 
+                   nhooks = 15, ndrops = 3, scope = 0, print_text = TRUE)
+
+#clockwise fish movement
+pp2 <- run_and_plot(numrow = 10, 
+                   numcol = 10, 
+                   nfish = 5000,
+                   distribute = 'uniform',
+                   seed = 302,
+                   nyears = 15, 
+                   random_locations = FALSE,
+                   location_list = location_list1, 
+                   nlocs = 12, 
+                   move_func = 'move_fish_cw', move_prob = .7,
+                   nhooks = 15, ndrops = 3, scope = 0, print_text = TRUE)
+
+#left fish movement
+pp3 <- run_and_plot(numrow = 10, 
+                   numcol = 10, 
+                   nfish = 5000,
+                   distribute = 'uniform',
+                   seed = 302,
+                   nyears = 15, 
+                   random_locations = FALSE,
+                   location_list = location_list1, 
+                   nlocs = 12, 
+                   move_func = 'move_fish_left', max_prob = .7, min_prob = 0,
+                   nhooks = 15, ndrops = 3, scope = 0, print_text = TRUE)
+dev.off()
+
+
+#-------------------------------------------------------------------------------------------
+#random locations and various movement patterns
+
+pdf(width = 13, height = 5.65, 
+  file = 'figs/random_location_different_movement.pdf')
+
+par(mfcol = c(1, 3), oma = c(2, 2, 0, 0))
+
+#no fish movement and uniform initial distribution
+pp1 <- run_and_plot(numrow = 10, 
+                   numcol = 10, 
+                   nfish = 5000,
+                   distribute = 'uniform',
+                   seed = 302,
+                   nyears = 15, 
+                   random_locations = TRUE,
+                   location_list = location_list1, 
+                   nlocs = 12, 
+                   move_func = 'move_fish_none', 
+                   nhooks = 15, ndrops = 3, scope = 0, print_text = TRUE)
+
+#clockwise fish movement
+pp2 <- run_and_plot(numrow = 10, 
+                   numcol = 10, 
+                   nfish = 5000,
+                   distribute = 'uniform',
+                   seed = 302,
+                   nyears = 15, 
+                   random_locations = TRUE,
+                   location_list = location_list1, 
+                   nlocs = 12, 
+                   move_func = 'move_fish_cw', move_prob = .7,
+                   nhooks = 15, ndrops = 3, scope = 0, print_text = TRUE)
+
+#left fish movement
+pp3 <- run_and_plot(numrow = 10, 
+                   numcol = 10, 
+                   nfish = 5000,
+                   distribute = 'uniform',
+                   seed = 302,
+                   nyears = 15, 
+                   random_locations = TRUE,
+                   location_list = location_list1, 
+                   nlocs = 12, 
+                   move_func = 'move_fish_left', max_prob = .7, min_prob = 0,
+                   nhooks = 15, ndrops = 3, scope = 0, print_text = TRUE)
+dev.off()
+
+#-------------------------------------------------------------------------------------------
+#Fixed locations and moving fish
+pdf(width = 13, height = 5.65, 
+  file = 'figs/fixed_location_clockwise_movement_different_distributions.pdf')
+par(mfcol = c(1, 3), oma = c(2, 2, 0, 0))
+
+#no fish movement and uniform initial distribution
+pp1 <- run_and_plot(numrow = 10, 
+                   numcol = 10, 
+                   nfish = 5000,
+                   distribute = 'uniform',
+                   seed = 302,
+                   nyears = 15, 
+                   random_locations = FALSE,
+                   location_list = location_list1, 
+                   nlocs = 12, 
+                   move_func = 'move_fish_cw', move_prob = .7,
+                   nhooks = 15, ndrops = 3, scope = 0, print_text = TRUE)
+
+#clockwise fish movement
+pp2 <- run_and_plot(numrow = 10, 
+                   numcol = 10, 
+                   nfish = 5000,
+                   distribute = 'patchy',
+                   seed = 302,
+                   nyears = 15, 
+                   random_locations = FALSE,
+                   location_list = location_list1, 
+                   nlocs = 12, 
+                   move_func = 'move_fish_cw', move_prob = .7,
+                   nhooks = 15, ndrops = 3, scope = 0, print_text = TRUE)
+
+#left fish movement
+pp3 <- run_and_plot(numrow = 10, 
+                   numcol = 10, 
+                   nfish = 5000,
+                   distribute = 'area',
+                   area = 'upperright',
+                   seed = 302,
+                   nyears = 15, 
+                   random_locations = FALSE,
+                   location_list = location_list1, 
+                   nlocs = 12, 
+                   move_func = 'move_fish_cw', move_prob = .7, 
+                   nhooks = 15, ndrops = 3, scope = 0, print_text = TRUE)
+dev.off()
+
+
+#-------------------------------------------------------------------------------------------
+#Random locations and moving fish
+pdf(width = 13, height = 5.65, 
+  file = 'figs/random_location_clockwise_movement_different_distributions.pdf')
+par(mfcol = c(1, 3), oma = c(2, 2, 0, 0))
+
+#no fish movement and uniform initial distribution
+pp1 <- run_and_plot(numrow = 10, 
+                   numcol = 10, 
+                   nfish = 5000,
+                   distribute = 'uniform',
+                   seed = 302,
+                   nyears = 15, 
+                   random_locations = TRUE,
+                   location_list = location_list1, 
+                   nlocs = 12, 
+                   move_func = 'move_fish_cw', move_prob = .7,
+                   nhooks = 15, ndrops = 3, scope = 0, print_text = TRUE)
+
+#clockwise fish movement
+pp2 <- run_and_plot(numrow = 10, 
+                   numcol = 10, 
+                   nfish = 5000,
+                   distribute = 'patchy',
+                   seed = 302,
+                   nyears = 15, 
+                   random_locations = TRUE,
+                   location_list = location_list1, 
+                   nlocs = 12, 
+                   move_func = 'move_fish_cw', move_prob = .7,
+                   nhooks = 15, ndrops = 3, scope = 0, print_text = TRUE)
+
+#left fish movement
+pp3 <- run_and_plot(numrow = 10, 
+                   numcol = 10, 
+                   nfish = 5000,
+                   distribute = 'area',
+                   area = 'upperright',
+                   seed = 302,
+                   nyears = 15, 
+                   random_locations = TRUE,
+                   location_list = location_list1, 
+                   nlocs = 12, 
+                   move_func = 'move_fish_cw', move_prob = .7, 
+                   nhooks = 15, ndrops = 3, scope = 0, print_text = TRUE)
+dev.off()
+
+
+#-------------------------------------------------------------------------------------------
+par(mfcol = c(1, 3))
+pp1 <- run_and_plot(numrow = 10, 
+                   numcol = 10, 
+                   nfish = 1000,
+                   distribute = 'uniform',
+                   area = 'upperleft', 
+                   seed = 302,
+                   nyears = 30, 
+                   random_locations = TRUE,
+                   location_list = list(c(2, 2), c(8, 8)), 
+                   nlocs = 10, 
+                   move_func = 'move_fish_none', 
+                   nhooks = 15, ndrops = 3, scope = 0, print_text = TRUE,
+                   xlim_s = c(0, 10000))
+
+pp2 <- run_and_plot(numrow = 10, 
+                   numcol = 10, 
+                   nfish = 5000,
+                   distribute = 'uniform',
+                   area = 'upperleft', 
+                   seed = 302, 
+                   nyears = 30, 
+                   random_locations = TRUE,
+                   location_list = list(c(2, 2), c(8, 8)), 
+                   nlocs = 10, 
+                   move_func = 'move_fish_none', 
+                   nhooks = 15, ndrops = 3, scope = 0, 
+                   xlim_s = c(0, 10000))
+
+pp3 <- run_and_plot(numrow = 10, 
+                   numcol = 10, 
+                   nfish = 10000,
+                   distribute = 'uniform',
+                   area = 'upperleft', 
+                   seed = 302, 
+                   nyears = 30, 
+                   random_locations = TRUE,
+                   location_list = list(c(2, 2), c(8, 8)), 
+                   nlocs = 10, 
+                   move_func = 'move_fish_none', 
+                   nhooks = 15, ndrops = 3, scope = 0)
+
+
+
+
+
+
+
 #high level wrapper to run and plot
+pp <- run_and_plot(numrow = 10, 
+                   numcol = 10, 
+                   nfish = 5000,
+                   distribute = 'area',
+                   area = 'upperleft', 
+                   seed = 302, 
+                   nyears = 15, 
+                   random_locations = FALSE,
+                   location_list = list(c(2, 2), c(8, 8)), 
+                   nlocs = 50, 
+                   move_func = 'move_fish_none', 
+                   nhooks = 15, ndrops = 3, scope = 0)
 
-run_and_plot(numrow = 10, numcol = 10, nfish = 1000,
-  distribute = 'uniform', seed = 300, nyears = 15, random_locations = TRUE, 
-  nlocs = 10, move_func = 'move_fish_cw', move_prob = .8)
+pp <- run_and_plot(numrow = 10, 
+                   numcol = 10, 
+                   nfish = 1000,
+                   distribute = 'uniform', 
+                   seed = 302, 
+                   nyears = 15, 
+                   random_locations = TRUE,
+                   # location_list = list(c(2, 2), c(8, 8)), 
+                   nlocs = 10, 
+                   move_func = 'move_fish_cw', 
+                   move_prob = .8, 
+                   nhooks = 15, ndrops = 3, scope = 0)
 
+
+
+
+xx301[[4]] == xx300.2[[4]]
+
+
+xx300.1$end_nfish == xx300.2$end_nfish
+xx301$end_nfish == xx300.2$end_nfish
 
 run_and_plot(numrow = 10, numcol = 10, nfish = 10000,
   distribute = 'uniform', seed = 300, nyears = 15, random_locations = TRUE, 
