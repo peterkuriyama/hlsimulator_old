@@ -13,8 +13,6 @@
 plot_annual_cpue_nfish <- function(parsed_list, cex.axis = 1.2, text_space = .25, 
   print_text = TRUE, ...){
 
-# browser()
-
   nfish_cpue <- merge(parsed_list$end_nfish %>% 
                         group_by(year) %>% 
                         summarise(nfish = sum(value)),
@@ -42,18 +40,23 @@ plot_annual_cpue_nfish <- function(parsed_list, cex.axis = 1.2, text_space = .25
 
   #----------------------------------------------------------------
   #Plot
+  ifelse(is.null(dot_args$xlim_s), xlim_s <- c(0, nfish), 
+    xlim_s <- dot_args$xlim_s)
+
+  #specify x limit if it is missing
   plot(nfish_cpue$nfish, nfish_cpue$cpue, ylim = c(0, 1), pch = 19,
-    xaxs = 'i', yaxs = 'i', xlim = c(0, nfish), type = 'o', axes = FALSE,
+    xaxs = 'i', yaxs = 'i', xlim = xlim_s, type = 'o', axes = FALSE,
     ann = FALSE, cex = 1.2 * cex.axis, lwd = cex.axis * 1.2, xpd = TRUE)
 
   #----------------------------------------------------------------
   #Add axes
-  axis(side = 1, at = pretty(0:nfish),
-    labels = format(pretty(0:nfish), big.mark = ',', scientific = FALSE),
+
+  axis(side = 1, at = pretty(xlim_s[1]:xlim_s[2]),
+    labels = format(pretty(xlim_s[1]:xlim_s[2]), big.mark = ',', scientific = FALSE),
     cex.axis = cex.axis)
 
-  mtext(side = 1, outer = T, "True Number of Fish", line = -2, cex = cex.axis * 1.3)
-  mtext(side = 2, outer = T, "CPUE (nfish / nhooks)", line = -1.5, cex = cex.axis * 1.3)
+  mtext(side = 1, outer = T, "True Number of Fish", line = -2, cex = cex.axis * 1.2)
+  mtext(side = 2, outer = T, "CPUE (nfish / nhooks)", line = -1.4, cex = cex.axis * 1.2)
   # mtext(side = 2, outer = T, "CPUE (nfish / nhooks)")
   axis(side = 2, las = 2, cex.axis = cex.axis)
 
