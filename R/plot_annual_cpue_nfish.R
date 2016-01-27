@@ -10,7 +10,10 @@
 #' @examples 
 #' plot example
 
-plot_annual_cpue_nfish <- function(parsed_list, cex.axis = 1.2, text_space = .25, ...){
+plot_annual_cpue_nfish <- function(parsed_list, cex.axis = 1.2, text_space = .25, 
+  print_text = TRUE, ...){
+
+# browser()
 
   nfish_cpue <- merge(parsed_list$end_nfish %>% 
                         group_by(year) %>% 
@@ -59,48 +62,57 @@ plot_annual_cpue_nfish <- function(parsed_list, cex.axis = 1.2, text_space = .25
   #specify text spacing
   spacing <- seq(1, 10, by = (1 + text_space))
 
-  mtext(side = 3, paste0(perc_sampled * 100, "% of ", nlocs_total ," locations sampled"), 
-    adj = .01, line = -spacing[1], cex = cex.axis * .8)
-  mtext(side = 3, paste0(format(nfish, big.mark = ','), ' fish initially'), 
-    adj = .01, line = -spacing[2], cex = cex.axis * .8)
-  
-  if(distribute == 'area'){
-    distribute <- dot_args$area
-  }
-
-  mtext(side = 3, paste0( distribute, ' Initial Fish Distribution'), 
-    adj = .01, line = -spacing[3], cex = cex.axis * .8)
-  
-  if(move_func_name == 'move_fish_cw'){
-    mtext(side = 3, 'Clockwise Fish Movement', 
-      adj = .01, line = -spacing[4], cex = cex.axis * .8)  
-  }
-
-  if(move_func_name == 'move_fish_left'){
-    mtext(side = 3, 'Offshore (left) Fish Movement', 
-      adj = .01, line = -spacing[4], cex = cex.axis * .8)  
-  }
-
-  if(move_func_name == 'move_fish_none'){
-    mtext(side = 3, 'No Fish Movement', 
-      adj = .01, line = -spacing[4], cex = cex.axis * .8)  
-  }
-
-  if(rand == TRUE) 
+  if(print_text == TRUE)
   {
-    mtext(side = 3, 'Random Location Sampling', 
-      adj = .01, line = -spacing[5], cex = cex.axis * .8)
-  }
+    mtext(side = 3, paste0(perc_sampled * 100, "% of ", nlocs_total ," locations sampled"), 
+      adj = .01, line = -spacing[1], cex = cex.axis * .8)
+    mtext(side = 3, paste0(format(nfish, big.mark = ','), ' fish initially'), 
+      adj = .01, line = -spacing[2], cex = cex.axis * .8)
+    
+    if(distribute == 'area')
+    {
+      distribute <- dot_args$area
+    }
 
-  if(rand == FALSE) 
-  {
-    mtext(side = 3, 'Fixed Location Sampling', 
-      adj = .01, line = -spacing[5], cex = cex.axis * .8)
-  }
+    mtext(side = 3, paste0( distribute, ' Initial Fish Distribution'), 
+      adj = .01, line = -spacing[3], cex = cex.axis * .8)
+    
+    if(move_func_name == 'move_fish_cw')
+    {
+      mtext(side = 3, 'Clockwise Fish Movement', 
+        adj = .01, line = -spacing[4], cex = cex.axis * .8)  
+    }
 
-  mtext(side = 3, paste0(nhooks, ' hooks, ', ndrops, ' drops, ', 
-    'fish move from ', scope, ' cells' ), adj = .01, line = -spacing[6],
-    cex = cex.axis * .8)
+    if(move_func_name == 'move_fish_left')
+    {
+      mtext(side = 3, 'Offshore (left) Fish Movement', 
+        adj = .01, line = -spacing[4], cex = cex.axis * .8)  
+    }
+
+    if(move_func_name == 'move_fish_none')
+    {
+      mtext(side = 3, 'No Fish Movement', 
+        adj = .01, line = -spacing[4], cex = cex.axis * .8)  
+    }
+
+    if(rand == TRUE) 
+    {
+      mtext(side = 3, 'Random Location Sampling', 
+        adj = .01, line = -spacing[5], cex = cex.axis * .8)
+    }
+
+    if(rand == FALSE) 
+    {
+      mtext(side = 3, 'Fixed Location Sampling', 
+        adj = .01, line = -spacing[5], cex = cex.axis * .8)
+    }
+
+    mtext(side = 3, paste0(nhooks, ' hooks, ', ndrops, ' drops, ', 
+      'fish move from ', scope, ' cells' ), adj = .01, line = -spacing[6],
+      cex = cex.axis * .8)
+
+  }
+  
 
 }
 
