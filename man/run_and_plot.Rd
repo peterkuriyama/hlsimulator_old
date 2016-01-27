@@ -6,7 +6,8 @@
 \usage{
 run_and_plot(numrow = 10, numcol = 10, nfish = 1000, distribute,
   seed = 300, nyears = 15, location_list, random_locations = FALSE,
-  nlocs = 10, move_func, ...)
+  nlocs = 10, move_func, nhooks, ndrops, scope = 0, pdf = FALSE,
+  png = FALSE, ...)
 }
 \arguments{
 \item{numrow}{Number of rows in matrix}

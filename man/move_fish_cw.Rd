@@ -4,7 +4,7 @@
 \alias{move_fish_cw}
 \title{Move Fish Clockwise}
 \usage{
-move_fish_cw(fish_area, move_prob, seed = 300)
+move_fish_cw(fish_area, move_prob, seed = 300, ...)
 }
 \arguments{
 \item{fish_area}{Input matrix of distributed fish}
