@@ -20,7 +20,7 @@ conduct_survey <- function(fish_area, location_list, scope, nhooks, ndrops, proc
 
   #keep initial population matrix
   init_area <- fish_area
-# browser()
+
   #Name sample list
   sample_list <- vector('list', length = length(location_list))
   names(sample_list) <- paste(location_list)

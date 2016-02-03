@@ -22,11 +22,9 @@
 sample_equal_prob <- function(nfish = 100, nhooks = 5, p0 = .001, 
   samp_size = 3){
   if(nhooks > 5){
-    # print('only five hooks allowed')
     nhooks <- 5
   }
   
-  # browser()
   f0 <- 1 - p0 #probability of no capture
   f <- p0 / 5 #same for each fish
   hook_probs <- vector(length = nhooks + 1)
@@ -39,13 +37,10 @@ sample_equal_prob <- function(nfish = 100, nhooks = 5, p0 = .001,
   hook_probs[6] <- 1 - sum(hook_probs[1:nhooks])
   
   hook_probs <- round(hook_probs, digits = 7)
-  if(sum(which(hook_probs < 0)) >= 1) browser()
-
-  #add check to keep probabilities above nonnegative
  
   out <- base::sample(0:nhooks, size = samp_size, prob = hook_probs, replace = TRUE)
   out <- sum(out)
-  # print(hook_probs)
+
   return(out)
 }
 

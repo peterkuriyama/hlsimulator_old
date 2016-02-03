@@ -83,14 +83,12 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   fish_to_catch <- fish_df[zero_index, 'moved']
   #--------Equal hook probabilities
   if(process == 'equal_prob'){
-    # browser()
-    dots <- list(...)
-    
+
+    dots <- list(...)    
     samples <- vector(length = ndrops)
-# browser()
+
     for(qq in 1:ndrops){
-      samples[qq] <- sample_equal_prob(nfish = fish_to_catch, nhooks = nhooks, p0 = dots$p0)
-      
+      samples[qq] <- sample_equal_prob(nfish = fish_to_catch, nhooks = nhooks, p0 = dots$p0)  
       fish_to_catch <- fish_to_catch - samples[qq]
     
       #add if statement so that samples[qq] cannot exceed fish_to_catch
@@ -113,8 +111,6 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
 
     for(qq in 1:ndrops){
       samples[qq] <- rhyper(n = nhooks, m = fish_to_catch, k = nhooks, nn = 1)
-      # print(fish_to_catch)
-      # print(samples)
       fish_to_catch <- fish_to_catch - samples[qq] #remove caught fish
     }
   }
@@ -159,8 +155,7 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
     # if(is.na(sum(mult_prob))) mult_prob <- rep(0, length(move_back_probs))
     # Sample from multinomial distribution
 # browser()
-    if(fish_df[zero_index, 'fished'] < 0) browser()
-    print(fish_df[zero_index, 'fished'])
+    # if(fish_df[zero_index, 'fished'] < 0) browser()
     moved_back <- as.vector(rmultinom(1, size = fish_df[zero_index, 'fished'],
                                       prob = mult_prob))
 
