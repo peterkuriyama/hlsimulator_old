@@ -37,4 +37,4 @@ sample_equal_prob <- function(p0 = .01, nfish = 100, nhooks = 5, ...){
   return(out)
 }
 
-sample_equal_prob(p0 = .5)
+# sample_equal_prob(p0 = .5)

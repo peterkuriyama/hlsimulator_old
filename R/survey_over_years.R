@@ -62,18 +62,17 @@ survey_over_years <- function(numrow = 10, numcol = 10, nfish = 1000, distribute
   temp_area <- init
   master_list <- vector('list', length = nyears)
   cpue_list <- vector('list', length = nyears)
-
+# browser()
   for(ii in 1:nyears){
     if(random_locations == TRUE){
       temp <- conduct_survey(fish_area = temp_area, location = location_list[[ii]], 
-            scope = scope, nhooks = nhooks, ndrops = ndrops,
-            process = 'hypergeometric')  
+            scope = scope, nhooks = nhooks, ndrops = ndrops, ...)  
     }
 
     if(random_locations == FALSE){
      temp <- conduct_survey(fish_area = temp_area, location = location_list, 
             scope = scope, nhooks = nhooks, ndrops = ndrops,
-            process = 'hypergeometric')   
+            process = process)   
     }
     
     master_list[[ii]] <- temp

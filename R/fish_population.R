@@ -15,7 +15,7 @@
 #also play with sampling probabilities and movements
 
 fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
-  process = 'hypergeometric'){
+  process = 'equal_prob', ...){
   #------------------------------------------------------
 # browser()
   #Count fish within the range
@@ -81,6 +81,26 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   #------------------------------------------------------
   #Now fish in specified cell, called zero.index
   fish_to_catch <- fish_df[zero_index, 'moved']
+  #--------Equal hook probabilities
+  if(process == 'equal_prob'){
+    # browser()
+    dots <- list(...)
+    
+    samples <- vector(length = ndrops)
+# browser()
+    for(qq in 1:ndrops){
+      samples[qq] <- sample_equal_prob(nfish = fish_to_catch, nhooks = nhooks, p0 = dots$p0)
+      
+      fish_to_catch <- fish_to_catch - samples[qq]
+    
+      #add if statement so that samples[qq] cannot exceed fish_to_catch
+      if(fish_to_catch < 0) fish_to_catch <- 0
+  
+    }
+    # p0 <- dots$p0
+    
+  }
+
   #--------Hypergeometric
   if(process == 'hypergeometric'){
     ###in rhyper
@@ -93,6 +113,8 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
 
     for(qq in 1:ndrops){
       samples[qq] <- rhyper(n = nhooks, m = fish_to_catch, k = nhooks, nn = 1)
+      # print(fish_to_catch)
+      # print(samples)
       fish_to_catch <- fish_to_catch - samples[qq] #remove caught fish
     }
   }
@@ -136,6 +158,9 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
 
     # if(is.na(sum(mult_prob))) mult_prob <- rep(0, length(move_back_probs))
     # Sample from multinomial distribution
+# browser()
+    if(fish_df[zero_index, 'fished'] < 0) browser()
+    print(fish_df[zero_index, 'fished'])
     moved_back <- as.vector(rmultinom(1, size = fish_df[zero_index, 'fished'],
                                       prob = mult_prob))
 
