@@ -28,12 +28,14 @@
 run_and_plot <- function(numrow = 10, numcol = 10, nfish = 1000, distribute,
   seed = 300, nyears = 15, location_list, random_locations = FALSE, nlocs = 10,
   move_func, nhooks, ndrops, scope = 0, pdf = FALSE,
-  png = FALSE, ...){
+  png = FALSE, make_plot = FALSE, ...){
 
+  #parse movement function and store name for plotting
   if(is.character(move_func) == FALSE) stop('movement function must be character string')
   move_func_name <- move_func
   move_func <- eval(parse(text = move_func))
-
+# browser()
+  #Main thing to run
   run <- survey_over_years(numrow = numrow, numcol = numcol, nfish = nfish, 
               distribute = distribute,
               seed = seed, nyears = nyears, location_list = location_list, 
@@ -44,24 +46,26 @@ run_and_plot <- function(numrow = 10, numcol = 10, nfish = 1000, distribute,
 
   run <- parse_master_list(run)
 
-  if(pdf == TRUE){
+  if(pdf == TRUE & make_plot == TRUE){
     fn <- strsplit(move_func_name, split = '_')[[1]][3]
     pdf_name <- paste0('figs/', paste0(distribute, '_', nlocs, 'locs', '_', nfish, 'fish_', fn, '.pdf'))
     pdf(width = 7, height = 7, file = pdf_name)
   }
 
-  if(png == TRUE){
+  if(png == TRUE & make_plot == TRUE){
     fn <- strsplit(move_func_name, split = '_')[[1]][3]
     png_name <- paste0('figs/', paste0(distribute, '_', nlocs, 'locs', '_', nfish, 'fish_', fn, '.png'))
     png(width = 7, height = 7, file = png_name, units = 'in', 
       res = 300)
   }
 
-  plot_annual_cpue_nfish(parsed_list = run, nfish = nfish,
-    distribute = distribute, seed = seed, nyears = nyears, 
-    nlocs = nlocs, move_func_name = move_func_name, nhooks = nhooks,
-    ndrops = ndrops, scope = scope, ...)
-
+  if(make_plot == TRUE & pdf + png < 1){
+    plot_annual_cpue_nfish(parsed_list = run, nfish = nfish,
+      distribute = distribute, seed = seed, nyears = nyears, 
+      nlocs = nlocs, move_func_name = move_func_name, nhooks = nhooks,
+      ndrops = ndrops, scope = scope, ...)
+  }
+  
   if(pdf + png > 0) dev.off() 
 
   return(run)
