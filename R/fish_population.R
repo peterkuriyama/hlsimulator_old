@@ -2,11 +2,13 @@
 #'
 #'Function to fish the population
 #'@param fish_area Matrix with the distribution of fish
-#'@param location vector specifying row and column to fish in
+#'@param location list of locations specifying rows and columns of fish_area to fish in. The length of the list will correspond
+#'                to the number of vessels
 #'@param scope the scope of fishing movement, default to 1 so fish in surrounding 1 cells can move in
 #'@param nhooks number of hooks at the smallest sampling size
 #'@param ndrops number of drops, default is 5 following hook and line protocol
-#'@param process specify process by which fish are sampled, options are 'multinomial' and 'hypergeometric'
+#'@param process specify process by which fish are sampled, options are 'multinomial', 'hypergeometric', and 'equal_prob'
+
 #'@export
 #may need to add angler specifications in at each time
 #currently it's just 15 hooks per drop, without the ability to specify angler
@@ -15,8 +17,14 @@
 #also play with sampling probabilities and movements
 
 fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
-  process = 'equal_prob', ...){
+  ...){
+  
+browser()
   #------------------------------------------------------
+  
+  dots <- list(...)    
+  process <- dots$process
+
 # browser()
   #Count fish within the range
   row_range <- (location[1] - scope):(location[1] + scope)
@@ -84,7 +92,7 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   #--------Equal hook probabilities
   if(process == 'equal_prob'){
 
-    dots <- list(...)    
+    
     samples <- vector(length = ndrops)
 
     for(qq in 1:ndrops){
