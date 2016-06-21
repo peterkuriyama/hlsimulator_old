@@ -4,13 +4,12 @@
 \alias{fish_population}
 \title{Fish the Population}
 \usage{
-fish_population(fish_area, location, scope = 1, nhooks, ndrops,
-  process = "hypergeometric")
+fish_population(fish_area, location, scope = 1, nhooks, ndrops, ...)
 }
 \arguments{
 \item{fish_area}{Matrix with the distribution of fish}
 
-\item{location}{vector specifying row and column to fish in}
+\item{location}{list of locations specifying rows and columns of fish_area to fish in. The length of the list will correspond to the number of vessels}
 
 \item{scope}{the scope of fishing movement, default to 1 so fish in surrounding 1 cells can move in}
 
@@ -18,7 +17,7 @@ fish_population(fish_area, location, scope = 1, nhooks, ndrops,
 
 \item{ndrops}{number of drops, default is 5 following hook and line protocol}
 
-\item{process}{specify process by which fish are sampled, options are 'multinomial' and 'hypergeometric'}
+\item{process}{specify process by which fish are sampled, options are 'multinomial', 'hypergeometric', and 'equal_prob'}
 }
 \description{
 Function to fish the population
