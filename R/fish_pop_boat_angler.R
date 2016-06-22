@@ -1,3 +1,13 @@
+
+#Need to start documentation with examples of this
+#Note vessels cannot fish in the same locations in a year
+#Can simulate declining population trend by decreasing the number of fish distributed throughout
+#the matrix
+
+#fishing is done in a for loop that is sequential , that is one vessel fishes
+#then another fishes, so that
+
+
 #Function to fish an area 
 #
 #Number of Anglers
@@ -21,7 +31,11 @@ fish_area <- initialize_population(distribute = 'patchy', numrow = 10, numcol = 
   nfish = 1000, percent = .50)
 fish_area_melted <- melt(fish_area) #melt because it is then easier to subset
 
+#------------------------------------------------------
 #Define range of rows and columns to fish in 
+row_ranges <- vector('list', length = length(unique(location$vessel)))
+col_ranges <- vector('list', length = length(unique(location$vessel)))
+
 for(ii in 1:length(unique(location$vessel))){
   temp <- subset(location, vessel == ii)
   
@@ -34,6 +48,9 @@ for(ii in 1:length(unique(location$vessel))){
     #then unlist so that everything is a vector
   names(row_range) <- NULL
   row_range <- unique(row_range)
+  row_range <- row_range[row_range %in% 1:nrow(fish_area)]
+
+
 
   ##Format y values (lats)
   lats <- data.frame(lat = temp$lat, min_lat = temp$lat - scope, 
@@ -42,13 +59,26 @@ for(ii in 1:length(unique(location$vessel))){
   col_range <- unlist(lapply(as.data.frame(t(lats)), function(x) x[2]:x[3]))
   names(col_range) <- NULL
   col_range <- unique(col_range)
+  col_range <- col_range[col_range %in% 1:ncol(fish_area)]
 
+  #Assign to slot in list
+  row_ranges[[ii]] <- row_range
+  col_ranges[[ii]] <- col_range
+}
 
+#------------------------------------------------------
+#Fish locations in a for loop
+for(ii in 1:length(row_ranges)){
+  row_range <- row_ranges[[ii]]
+  col_range <- col_ranges[[ii]]
+
+  
+  locs <- subset(location, vessel == ii)
+
+  subset(fish_area_melted, Var1 )
 
 }
 
-
-location %>% group_by(vessel) %>% unique(long)
 
 
 
