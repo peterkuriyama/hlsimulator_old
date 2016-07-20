@@ -5,7 +5,7 @@
 \title{Initialize Population}
 \usage{
 initialize_population(numrow, numcol, nfish = 100, seed = 300, distribute,
-  maxfish = 10, area = "upperleft", percent = 0.1)
+  maxfish = 10, area = "upperleft", percent = 0.1, ...)
 }
 \arguments{
 \item{numrow}{Number of rows in matrix}
@@ -20,9 +20,7 @@ initialize_population(numrow, numcol, nfish = 100, seed = 300, distribute,
 
 \item{maxfish}{Maximum number of fish that can be sampled at a time}
 
-\item{area}{Specify area to distribute fish, options are 'upperleft', 'upperright', 'lowerleft', 'lowerright',
-'upperhalf', 'lowerhalf', 'righthalf', 'lefthalf' 
-  Only necessary if distribute == 'area'}
+\item{area}{Specify area to distribute fish, options are 'upperleft', 'upperright', 'lowerleft', 'lowerright',#' 'upperhalf', 'lowerhalf', 'righthalf', 'lefthalf'  Only necessary if distribute == 'area'}
 
 \item{percent}{percentage of area to sample. Only necessary if distribute == 'patchy'}
 }

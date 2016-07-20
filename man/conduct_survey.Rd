@@ -7,8 +7,7 @@ Wrapper to repeatedly run fish_population function
 Give function arguments for
 This function initializes the spatial distribution of the fish population}
 \usage{
-conduct_survey(fish_area, location_list, scope, nhooks, ndrops,
-  process = "hypergeometric")
+conduct_survey(fish_area, location_list, scope, nhooks, ndrops, ...)
 }
 \arguments{
 \item{fish_area}{Matrix with the distribution of fish}

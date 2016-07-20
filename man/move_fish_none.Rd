@@ -4,7 +4,7 @@
 \alias{move_fish_none}
 \title{Move Fish None}
 \usage{
-move_fish_none(fish_area)
+move_fish_none(fish_area, ...)
 }
 \arguments{
 \item{fish_area}{Input matrix of distributed fish}

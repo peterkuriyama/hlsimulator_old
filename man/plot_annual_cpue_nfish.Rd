@@ -4,7 +4,8 @@
 \alias{plot_annual_cpue_nfish}
 \title{Plot annual cpue nfish}
 \usage{
-plot_annual_cpue_nfish(parsed_list, cex.axis = 1.2, text_space = 0.25, ...)
+plot_annual_cpue_nfish(parsed_list, cex.axis = 1.2, text_space = 0.25,
+  print_text = TRUE, ...)
 }
 \arguments{
 \item{parsed_list}{output of survey_over_years melted for formatting}
