@@ -8,9 +8,7 @@
 #' @param distribute Specify fish distribution to be 'uniform', 'patchy', or 'area' specific
 #' @param maxfish Maximum number of fish that can be sampled at a time
 #' @param percent percentage of area to sample. Only necessary if distribute == 'patchy'
-#' @param area Specify area to distribute fish, options are 'upperleft', 'upperright', 'lowerleft', 'lowerright',
-#' 'upperhalf', 'lowerhalf', 'righthalf', 'lefthalf' 
-#'   Only necessary if distribute == 'area'
+#' @param area Specify area to distribute fish, options are 'upperleft', 'upperright', 'lowerleft', 'lowerright',#' 'upperhalf', 'lowerhalf', 'righthalf', 'lefthalf'  Only necessary if distribute == 'area'
 #' @keywords initialize
 #' @export
 #' @examples 
@@ -35,7 +33,7 @@
 
 initialize_population <- function(numrow, numcol, nfish = 100, seed = 300, distribute,  
   maxfish = 10, area = 'upperleft', percent = .1, ...){
-
+# browser()
   #initial check
   if(distribute %in% c('area', 'patchy', 'uniform') == FALSE){
     stop('specify distribute as area, patchy, or uniform')

@@ -35,10 +35,12 @@
 survey_over_years <- function(numrow = 10, numcol = 10, nfish = 1000, distribute,
   seed = 300, nyears = 15, location_list, random_locations = FALSE, nlocs = 10,
   move_func, nhooks, ndrops, scope, ...){
-# browser()
+# browser()  
   init <- initialize_population(numrow = numrow, numcol = numcol, nfish = nfish, 
         distribute = distribute, seed = seed, ...)
-  
+
+# browser()  
+
   #Specify locations to fish if random locations is TRUE
   if(random_locations == TRUE){
     potential_location <- expand.grid(1:numrow, 1:numcol)
@@ -62,7 +64,7 @@ survey_over_years <- function(numrow = 10, numcol = 10, nfish = 1000, distribute
   temp_area <- init
   master_list <- vector('list', length = nyears)
   cpue_list <- vector('list', length = nyears)
-# browser()
+
   for(ii in 1:nyears){
     if(random_locations == TRUE){
       temp <- conduct_survey(fish_area = temp_area, location = location_list[[ii]], 
@@ -71,8 +73,7 @@ survey_over_years <- function(numrow = 10, numcol = 10, nfish = 1000, distribute
 
     if(random_locations == FALSE){
      temp <- conduct_survey(fish_area = temp_area, location = location_list, 
-            scope = scope, nhooks = nhooks, ndrops = ndrops,
-            process = process)   
+            scope = scope, nhooks = nhooks, ndrops = ndrops, ...)   
     }
     
     master_list[[ii]] <- temp
@@ -82,7 +83,7 @@ survey_over_years <- function(numrow = 10, numcol = 10, nfish = 1000, distribute
     cpue_list[[ii]] <- cpue
 
     temp_area <- temp$sampled_area
-# browser()
+
     temp <- move_func(temp_area, ...)
     temp_area <- temp$final
 

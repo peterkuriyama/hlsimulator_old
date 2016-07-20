@@ -18,14 +18,23 @@
 fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   ...){
   
-browser()
-  #------------------------------------------------------
-  
   dots <- list(...)    
   process <- dots$process
 
-# browser()
   #Count fish within the range
+
+  #If fishing location is on border of fishArea
+  
+  # lapply(location, function(x) print(x))
+  # aa <- lapply(location, function(x) (x[1] - scope):(x[1] + scope))  
+
+  # #rewrite this as a for loop
+  
+  # for(ii in 1:length(location)){
+  #   row_range <- location[[ii]][, 1]
+  # }
+
+
   row_range <- (location[1] - scope):(location[1] + scope)
   row_range <- row_range[row_range %in% 1:nrow(fish_area)]
 

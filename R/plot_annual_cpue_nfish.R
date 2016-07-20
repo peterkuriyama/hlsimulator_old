@@ -55,8 +55,8 @@ plot_annual_cpue_nfish <- function(parsed_list, cex.axis = 1.2, text_space = .25
     labels = format(pretty(xlim_s[1]:xlim_s[2]), big.mark = ',', scientific = FALSE),
     cex.axis = cex.axis)
 
-  mtext(side = 1, outer = T, "True Number of Fish", line = -2, cex = cex.axis * 1.2)
-  mtext(side = 2, outer = T, "CPUE (nfish / nhooks)", line = -1.4, cex = cex.axis * 1.2)
+  mtext(side = 1, outer = T, "Number of Fish", line = -2, cex = cex.axis * 1.2)
+  mtext(side = 2, outer = T, "CPUE", line = -1.4, cex = cex.axis * 1.2)
   # mtext(side = 2, outer = T, "CPUE (nfish / nhooks)")
   axis(side = 2, las = 2, cex.axis = cex.axis)
 

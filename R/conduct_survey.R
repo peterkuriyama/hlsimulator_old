@@ -15,9 +15,9 @@
 #' put example here dude
 #'
 
-conduct_survey <- function(fish_area, location_list, scope, nhooks, ndrops, process = 'hypergeometric', 
+conduct_survey <- function(fish_area, location_list, scope, nhooks, ndrops, 
   ...){
-
+# browser()
   #keep initial population matrix
   init_area <- fish_area
 
@@ -29,9 +29,10 @@ conduct_survey <- function(fish_area, location_list, scope, nhooks, ndrops, proc
 # browser()
   for(zz in 1:length(sample_list)){
     # if(zz == 5 & get('pp', parent.frame()) == 2) browser()
+    # temp <- fish_population(fish_area = fish_area, location = location_list[[zz]], scope = scope,
+    #                 nhooks = nhooks, ndrops = ndrops, process = process, ...)
     temp <- fish_population(fish_area = fish_area, location = location_list[[zz]], scope = scope,
-                    nhooks = nhooks, ndrops = ndrops, process = process, ...)
-
+                    nhooks = nhooks, ndrops = ndrops, ...)
     fish_area <- temp[[1]]
     sample_list[[zz]] <- temp[[2]]
   }
