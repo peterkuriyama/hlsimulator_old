@@ -1,27 +1,22 @@
-#' Move Fish Hotspots
+#' Move Fish based on Hotspots
 #'
 #' This function is meant to simulate fish moving towards hotspots. The idea is that rockfish
-#' tend to aggregate around rocky structure
-#' One function call results in 
-#' fish moving one column to the left with some probability (specified in the arguments). 
-#' Probabilities decline evenly by column (highest on furthest left column).
-#' @param fish_area Input matrix of distributed fish
-#'Need to fill all these in
+#' tend to aggregate around rocky structure. The user specifies hotspots and the
+#' fish then move towards the hotspots with some probability max_prob.
+#'
+#' @param fish_area Input matrix of distributed fish. Use initialize population to specify this
+#' @param hotspots Specify the location of hotspots as a data frame with the names 
+#' @param max_prob Maximum probability of moving toward the hotspots. Cells adjacent to 
+#' the hotspots have the highest probability, cells two cells from the hotspots have a probability
+#' of moving that is half max_prob.
 
-#' @param max_prob maximum movement probability in the furthest left location
-#' @param min_prob minimum movement probability in furthest right location
 #' @keywords movement
 #' @export
 #' @examples 
-#' 
-
-fish_area <- initialize_population(distribute = 'patchy', numrow = 10, numcol = 10, seed = 5,
-  nfish = 1000, percent = .50)
-
-hotspots <- data.frame('row' = c(3, 2), 
-                       'column' = c(3, 5))
-max_prob = 0.5
-
+#' move_fish_hs(fish_area = initialize_population(distribute = 'patchy', numrow = 10, numcol = 10, seed = 5,
+#'                          nfish = 1000, percent = .50), 
+#'              hotspots = data.frame('row' = c(3, 2), 'column' = c(3, 5)),
+#'              max_prob = 0.2)
 
 move_fish_hs <- function(fish_area, hotspots, max_prob = 0.5, ...){
   numrow <- nrow(fish_area)
