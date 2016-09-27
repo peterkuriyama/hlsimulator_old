@@ -2,7 +2,8 @@
 #'
 #'Function to fish the population
 #'@param fish_area Matrix with the distribution of fish
-#'@param location list of locations specifying rows and columns of fish_area to fish in. The length of the list will correspond to the number of vessels
+#'@param location Data frame of locations with column for vessel, rows, and columns of fish are to fish in. 
+# '@param location list of locations specifying rows and columns of fish_area to fish in. The length of the list will correspond to the number of vessels
 #'@param scope the scope of fishing movement, default to 1 so fish in surrounding 1 cells can move in
 #'@param nhooks number of hooks at the smallest sampling size
 #'@param ndrops number of drops, default is 5 following hook and line protocol
@@ -17,10 +18,11 @@
 
 fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   ...){
-  
+
   dots <- list(...)    
   process <- dots$process
 
+  if(class(location) != "data.frame") stop("location must be a data frame")
   #Count fish within the range
 
   #If fishing location is on border of fishArea
@@ -34,8 +36,9 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   #   row_range <- location[[ii]][, 1]
   # }
 
-
+browser() 
   row_range <- (location[1] - scope):(location[1] + scope)
+ 
   row_range <- row_range[row_range %in% 1:nrow(fish_area)]
 
   col_range <- (location[2] - scope):(location[2] + scope)
