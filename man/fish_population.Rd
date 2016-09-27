@@ -9,7 +9,7 @@ fish_population(fish_area, location, scope = 1, nhooks, ndrops, ...)
 \arguments{
 \item{fish_area}{Matrix with the distribution of fish}
 
-\item{location}{list of locations specifying rows and columns of fish_area to fish in. The length of the list will correspond to the number of vessels}
+\item{location}{Data frame of locations with column for vessel, rows, and columns of fish are to fish in.}
 
 \item{scope}{the scope of fishing movement, default to 1 so fish in surrounding 1 cells can move in}
 
