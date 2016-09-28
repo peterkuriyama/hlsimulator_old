@@ -37,8 +37,6 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   # for(ii in 1:length(location)){
   #   row_range <- location[[ii]][, 1]
   # }
-
-
   
   #Look at just the first row of location, 
   #NEED TO EXPAND THIS INTO A FOR LOOP EVENTUALLYs
@@ -116,7 +114,7 @@ browser()
 
   #Might have to put for loop here depending on the number of anglers
 
-process <- 
+#About to add the variable hook probabilities
 
   #--------Equal hook probabilities
 
