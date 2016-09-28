@@ -7,7 +7,12 @@
 #'@param p0 Probability that fish detects gear
 #'@param nhooks Number of hooks, affects the probability f that a fish selects a hook
 
-#'@export
+#' @return Vector of probabilities of catch 0, 1, 2, 3, 4, or 5 fish
+
+#' @examples
+#' hook_probs(nfish = 40, p0 = .4, nhooks = 5)
+
+#' @export
 
 hook_probs <- function(nfish, p0 = .4, nhooks = 5){
   f <- p0 / nhooks

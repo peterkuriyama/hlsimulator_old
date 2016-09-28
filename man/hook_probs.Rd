@@ -13,8 +13,14 @@ hook_probs(nfish, p0 = 0.4, nhooks = 5)
 
 \item{nhooks}{Number of hooks, affects the probability f that a fish selects a hook}
 }
+\value{
+Vector of probabilities of catch 0, 1, 2, 3, 4, or 5 fish
+}
 \description{
 Define probabilities of catching certain fish. Assumes that each fish selects a 
 hook at random. Based on comments from 2012 CIE review.
+}
+\examples{
+hook_probs(nfish = 40, p0 = .4, nhooks = 5)
 }
 
