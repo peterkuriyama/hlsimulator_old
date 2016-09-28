@@ -9,7 +9,6 @@
 
 #'@export
 
-
 hook_probs <- function(nfish, p0 = .4, nhooks = 5){
   f <- p0 / nhooks
   f0 <- 1 - p0
