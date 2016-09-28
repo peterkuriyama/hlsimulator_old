@@ -23,6 +23,8 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   process <- dots$process
 
   if(class(location) != "data.frame") stop("location must be a data frame")
+  
+
   #Count fish within the range
 
   #If fishing location is on border of fishArea
@@ -36,12 +38,18 @@ fish_population <- function(fish_area, location, scope = 1, nhooks, ndrops,
   #   row_range <- location[[ii]][, 1]
   # }
 
-browser() 
-  row_range <- (location[1] - scope):(location[1] + scope)
- 
-  row_range <- row_range[row_range %in% 1:nrow(fish_area)]
 
-  col_range <- (location[2] - scope):(location[2] + scope)
+  
+  #Look at just the first row of location, 
+  #NEED TO EXPAND THIS INTO A FOR LOOP EVENTUALLYs
+  ii <- 1
+
+
+  row_range <- (location[ii, 'x'] - scope):(location[ii, 'x'] + scope)
+ 
+  row_range <- row_range[row_range %in% 1:nrow(fish_area)] #If there's a border case maybe?
+
+  col_range <- (location[ii, 'y'] - scope):(location[ii, 'y'] + scope)
   col_range <- col_range[col_range %in% 1:ncol(fish_area)]
 
   #Define range to fish
@@ -49,10 +57,10 @@ browser()
 
   #Use melted matrix because fish_area is easier to subset
   fish_range_melted <- subset(fish_area_melted, Var1 %in% row_range & Var2 %in% col_range)
-  fish_location_melted <-subset(fish_area_melted, Var1 == location[1] & Var2 == location[2])
+  fish_location_melted <-subset(fish_area_melted, Var1 == location[ii, 'x'] & Var2 == location[ii, 'y'])
 
   #define zero index
-  zero_index <-  which(fish_range_melted$Var1 == location[1] & fish_range_melted$Var2 == location[2])
+  zero_index <-  which(fish_range_melted$Var1 == location[ii, 'x'] & fish_range_melted$Var2 == location[ii, 'y'])
 
   fish_range <- matrix(fish_range_melted$value, nrow = length(row_range), ncol = length(col_range))
   fish_in_loc <- fish_location_melted$value
@@ -60,7 +68,9 @@ browser()
   #define number of fish outside
   nfish_outside <- sum(fish_range) - fish_in_loc
 
-  #------------------------------------------------------
+  #------------------------------------------------------------------------------------------------------------
+  ##Fish Movement
+
   #Move fish to specified location
 
   #Calculate movement probabilities
@@ -71,9 +81,10 @@ browser()
 
   #create data frame of fish_range [fish to catch] because
     #easier to manipulate
+  #Can streamline this whole process here
   fish_df <- melt(fish_range)
   fish_df$prob <- melt(probs)$value
-
+browser() 
   # if(sum(is.na(fish_df$prob)) > 0) browser()
 
   #If there are no fish within scope, set movement probabilities to 0
@@ -97,9 +108,19 @@ browser()
   fish_df$moved <- fish_df$value - fish_df$moving #moved column indicates nfish after movement
   fish_df[zero_index, 'moved'] <- fish_df[zero_index, 'value'] + sum(fish_df$moving)
 
-  #------------------------------------------------------
+  #------------------------------------------------------------------------------------------------------------
+  #Fishing in locations
+
   #Now fish in specified cell, called zero.index
   fish_to_catch <- fish_df[zero_index, 'moved']
+
+  #Might have to put for loop here depending on the number of anglers
+
+process <- 
+
+  #--------Equal hook probabilities
+
+
   #--------Equal hook probabilities
   if(process == 'equal_prob'){
 
