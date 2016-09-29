@@ -10,8 +10,9 @@
 #' @param percent percentage of area to sample. Only necessary if distribute == 'patchy'
 #' @param area Specify area to distribute fish, options are 'upperleft', 'upperright', 'lowerleft', 'lowerright',#' 'upperhalf', 'lowerhalf', 'righthalf', 'lefthalf'  Only necessary if distribute == 'area'
 #' @keywords initialize
-#' @export
 #' @examples 
+
+
 #' 
 #' Uniformly distribute fish
 #' initialize_population(numrow = 10, numcol = 10, nfish = 1000, distribute = 'uniform')
@@ -30,6 +31,7 @@
 #'
 #' 
 
+#' @export
 
 initialize_population <- function(numrow, numcol, nfish = 100, seed = 300, distribute,  
   maxfish = 10, area = 'upperleft', percent = .1, ...){
