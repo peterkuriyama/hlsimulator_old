@@ -23,7 +23,7 @@ fish then move towards the hotspots with some probability max_prob.
 \examples{
 move_fish_hs(fish_area = initialize_population(distribute = 'patchy', numrow = 10, numcol = 10, seed = 5,
                          nfish = 1000, percent = .50), 
-             hotspots = data.frame('row' = c(3, 2), 'column' = c(3, 5))
+             hotspots = data.frame('row' = c(3, 2), 'column' = c(3, 5)),
              max_prob = 0.2)
 }
 \keyword{movement}
