@@ -12,7 +12,6 @@
 #' @keywords initialize
 #' @examples 
 
-
 #' 
 #' Uniformly distribute fish
 #' initialize_population(numrow = 10, numcol = 10, nfish = 1000, distribute = 'uniform')
